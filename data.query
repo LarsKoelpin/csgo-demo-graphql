@@ -1,0 +1,26 @@
+{
+      demo {
+			  header {
+          mapName
+          tickRate
+          snapshotRate
+        }
+        ticks {
+          tick
+          totalRoundsPlayed
+          participants {
+            entityId
+            team
+            position {
+              x
+            }
+          }
+          bomb {
+           carrier {
+             entityId
+
+            }
+          }
+        }
+      }
+}

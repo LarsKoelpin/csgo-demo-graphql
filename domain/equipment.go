@@ -1,4 +1,4 @@
-package main
+package domain
 
 import (
 	"github.com/graphql-go/graphql"
@@ -26,7 +26,7 @@ var EquipmentType = graphql.NewObject(graphql.ObjectConfig{
 	},
 })
 
-func toEntityEquipment(eq []*common.Equipment) []Equipment {
+func ToEntityEquipment(eq []*common.Equipment) []Equipment {
 	var equipmentForPlayer = make([]Equipment, 0, len(eq))
 
 	for _, equipment := range eq {

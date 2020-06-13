@@ -1,4 +1,4 @@
-package main
+package domain
 
 import "github.com/graphql-go/graphql"
 
@@ -20,7 +20,7 @@ func CreateDemoType(d Demo) *graphql.Object {
 				},
 			},
 			"ticks": &graphql.Field{
-				Name: "header",
+				Name: "ticks",
 				Type: graphql.NewList(TickType),
 				Args: nil,
 				Resolve: func(resolvParams graphql.ResolveParams) (interface{}, error) {

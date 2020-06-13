@@ -1,4 +1,4 @@
-package main
+package domain
 
 import "github.com/graphql-go/graphql"
 
