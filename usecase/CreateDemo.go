@@ -2,8 +2,8 @@ package usecase
 
 import (
   "github.com/larskoelpin/csgo-demo-graphql/domain"
-  dem "github.com/markus-wa/demoinfocs-golang/pkg/demoinfocs"
-  "github.com/markus-wa/demoinfocs-golang/pkg/demoinfocs/events"
+  dem "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs"
+  "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
   "math"
   "os"
 )
