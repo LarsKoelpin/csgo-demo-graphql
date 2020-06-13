@@ -1,5 +1,4 @@
 
-
 Run using
 ```bash
 go run main.go demo.go header.go tick.go equipment.go position.go   
