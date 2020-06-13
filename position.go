@@ -8,17 +8,17 @@ type Position struct {
 	Z float64 `json:"z"`
 }
 
-var PositioType = graphql.NewObject(graphql.ObjectConfig{
-  Name: "position",
-  Fields: graphql.Fields{
-    "x": &graphql.Field{
-      Type: graphql.Float,
-    },
-    "y": &graphql.Field{
-      Type: graphql.Float,
-    },
-    "z": &graphql.Field{
-      Type: graphql.Float,
-    },
-  },
+var PositionType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "position",
+	Fields: graphql.Fields{
+		"x": &graphql.Field{
+			Type: graphql.Float,
+		},
+		"y": &graphql.Field{
+			Type: graphql.Float,
+		},
+		"z": &graphql.Field{
+			Type: graphql.Float,
+		},
+	},
 })

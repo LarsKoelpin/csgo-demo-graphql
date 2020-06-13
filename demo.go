@@ -2,6 +2,11 @@ package main
 
 import "github.com/graphql-go/graphql"
 
+type Demo struct {
+	Header Header
+	Ticks  []Tick
+}
+
 func CreateDemoType(d Demo) *graphql.Object {
 	return graphql.NewObject(graphql.ObjectConfig{
 		Name: "demo",
@@ -14,23 +19,14 @@ func CreateDemoType(d Demo) *graphql.Object {
 					return d.Header, nil
 				},
 			},
-      "ticks": &graphql.Field{
-        Name: "header",
-        Type: graphql.NewList(TickType),
-        Args: nil,
-        Resolve: func(resolvParams graphql.ResolveParams) (interface{}, error) {
-          return d.Ticks, nil
-        },
-      },
+			"ticks": &graphql.Field{
+				Name: "header",
+				Type: graphql.NewList(TickType),
+				Args: nil,
+				Resolve: func(resolvParams graphql.ResolveParams) (interface{}, error) {
+					return d.Ticks, nil
+				},
+			},
 		},
 	})
-}
-
-type Demo struct {
-	Header Header
-	Ticks []Tick
-}
-
-
-type Event struct {
 }

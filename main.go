@@ -1,14 +1,15 @@
 package main
 
 import (
-  "encoding/json"
-  "fmt"
-  "github.com/graphql-go/graphql"
-  "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
-  dem "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs"
-  "log"
-  "math"
-  "os"
+	"encoding/json"
+	"fmt"
+	"log"
+	"math"
+	"os"
+
+	"github.com/graphql-go/graphql"
+	dem "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs"
+	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
 )
 
 func main() {
@@ -16,21 +17,22 @@ func main() {
 	p := dem.NewParser(f)
 	header, _ := p.ParseHeader()
 
-	snapshotRate := int(math.Round(header.FrameRate() / 0.5))
+	snapshotRate := int(math.Round(header.FrameRate() / 0.1))
 	renderedTicks := make([]Tick, 0)
 	p.RegisterEventHandler(
 		func(e events.FrameDone) {
 			tick := p.CurrentFrame()
-			players := make([]Player, 0)
+			players := make([]Participant, 0)
 
 			if tick%snapshotRate == 0 {
 				for _, pl := range p.GameState().Participants().Playing() {
-					e := Player{
+					e := Participant{
+						Name:          pl.Name,
 						EntityID:      pl.EntityID,
 						Hp:            pl.Health(),
 						Armor:         pl.Armor(),
 						FlashDuration: 0.1, // Round to nearest 0.1 sec - saves space in JSON
-						Positions: Position{
+						Position: Position{
 							X: pl.Position().X,
 							Y: pl.Position().Y,
 							Z: pl.Position().Z,
@@ -48,11 +50,13 @@ func main() {
 						Deaths:       pl.Deaths(),
 						IsInBuyzone:  pl.IsInBuyZone(),
 					}
+
 					players = append(players, e)
 				}
 				renderedTicks = append(renderedTicks, Tick{
-					Tick: tick,
-					Players: players,
+					Tick:              tick,
+					Participants:      players,
+					TotalRoundsPlayed: p.GameState().TotalRoundsPlayed(),
 				})
 			}
 		})
@@ -67,7 +71,6 @@ func main() {
 			ClientName:   header.ClientName,
 		},
 		Ticks: renderedTicks,
-
 	}
 	demoType := CreateDemoType(demo)
 
@@ -98,11 +101,18 @@ func main() {
         }
         ticks {
           tick
-          players {
+          totalRoundsPlayed
+          participants {
             entityId
             team
             position {
               x
+            }
+          }
+          bomb {
+           carrier {
+             entityId
+
             }
           }
         }
