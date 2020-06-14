@@ -11,11 +11,16 @@ import (
 )
 
 func DemoFromFile(filePath string, freq float64) domain.Demo {
-	f, _ := os.Open("examples/test.dem")
+	f, err := os.Open(filePath)
+
+	if err != nil {
+		log.Print("File not found!", filePath)
+		os.Exit(0)
+	}
 	p := dem.NewParser(f)
 	header, _ := p.ParseHeader()
 
-	snapshotRate := int(math.Round(header.FrameRate() / 0.5))
+	snapshotRate := int(math.Round(header.FrameRate() / freq))
 	renderedTicks := make([]domain.Tick, 0)
 	p.RegisterEventHandler(
 		func(e events.FrameDone) {

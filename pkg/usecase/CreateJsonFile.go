@@ -5,8 +5,8 @@ import (
 	"os"
 )
 
-func CreateJsonFile(json string) {
-	file, _ := os.Create("examples/test.json")
+func CreateJsonFile(filename string, json string) {
+	file, _ := os.Create(filename)
 	log.Print("Writing JSON file ...")
 	file.Write([]byte(json))
 }
