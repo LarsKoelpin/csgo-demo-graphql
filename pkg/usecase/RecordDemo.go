@@ -5,13 +5,16 @@ import (
 	"math"
 	"os"
 
+	"github.com/larskoelpin/csgo-demo-graphql/pkg/domain/gameevents"
+
 	"github.com/larskoelpin/csgo-demo-graphql/pkg/domain"
 	dem "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs"
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
 )
 
-func DemoFromFile(filePath string, freq float64) domain.Demo {
+func RecordDemo(filePath string, freq float64) domain.Demo {
 	f, err := os.Open(filePath)
+	log.Print("Recording demo ", filePath)
 
 	if err != nil {
 		log.Print("File not found!", filePath)
@@ -19,6 +22,18 @@ func DemoFromFile(filePath string, freq float64) domain.Demo {
 	}
 	p := dem.NewParser(f)
 	header, _ := p.ParseHeader()
+
+	allEvents := make([]domain.GameEvent, 0)
+
+	p.RegisterEventHandler(func(e events.BombPlanted) {
+		allEvents = append(allEvents, domain.GameEvent{
+			Name: "BOMB_PLANTED",
+			Event: gameevents.BombPlanted{
+				Player:   domain.CreateParticipant(e.Player),
+				Bombsite: int32(e.Site),
+			},
+		})
+	})
 
 	snapshotRate := int(math.Round(header.FrameRate() / freq))
 	renderedTicks := make([]domain.Tick, 0)
@@ -29,30 +44,7 @@ func DemoFromFile(filePath string, freq float64) domain.Demo {
 
 			if tick%snapshotRate == 0 {
 				for _, pl := range p.GameState().Participants().Playing() {
-					e := domain.Participant{
-						Name:          pl.Name,
-						EntityID:      pl.EntityID,
-						Hp:            pl.Health(),
-						Armor:         pl.Armor(),
-						FlashDuration: 0.1, // Round to nearest 0.1 sec - saves space in JSON
-						Position: domain.Position{
-							X: pl.Position().X,
-							Y: pl.Position().Y,
-							Z: pl.Position().Z,
-						},
-						AngleX:       int(pl.ViewDirectionX()),
-						AngleY:       int(pl.ViewDirectionY()),
-						HasHelmet:    pl.HasHelmet(),
-						HasDefuseKit: pl.HasDefuseKit(),
-						Equipment:    domain.ToEntityEquipment(pl.Weapons()),
-						Team:         int(pl.Team),
-						IsDefusing:   pl.IsDefusing,
-						IsPlanting:   pl.IsPlanting,
-						Money:        pl.Money(),
-						Kills:        pl.Kills(),
-						Deaths:       pl.Deaths(),
-						IsInBuyzone:  pl.IsInBuyZone(),
-					}
+					e := domain.CreateParticipant(pl)
 
 					players = append(players, e)
 				}
@@ -64,9 +56,14 @@ func DemoFromFile(filePath string, freq float64) domain.Demo {
 			}
 		})
 
-	p.ParseToEnd()
+	err = p.ParseToEnd()
 
-	log.Print("Parsing finished")
+	if err != nil {
+		log.Print("Error when paring the demo", err)
+		os.Exit(0)
+	}
+
+	log.Print("Recording finished")
 
 	return domain.Demo{
 		Header: domain.Header{
@@ -75,5 +72,6 @@ func DemoFromFile(filePath string, freq float64) domain.Demo {
 			SnapshotRate: 1,
 		},
 		Ticks: renderedTicks,
+		Events: allEvents,
 	}
 }

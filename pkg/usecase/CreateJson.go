@@ -14,6 +14,7 @@ func CreateJson(schema graphql.Schema, query string) string {
 	if len(r.Errors) > 0 {
 		log.Fatalf("failed to execute graphql operation, errors: %+v", r.Errors)
 	}
+	log.Print("Start mashalling ...");
 	rJSON, _ := json.Marshal(r)
 
 	return string(rJSON)

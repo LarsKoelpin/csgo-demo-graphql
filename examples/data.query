@@ -1,5 +1,8 @@
 {
       demo(freq: 20, demoFile: "examples/test.dem") {
+        events {
+          name
+        }
 			  header {
           mapName
           tickRate

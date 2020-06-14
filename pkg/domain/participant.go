@@ -1,6 +1,9 @@
 package domain
 
-import "github.com/graphql-go/graphql"
+import (
+	"github.com/graphql-go/graphql"
+	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/common"
+)
 
 var ParticipantType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "players",
@@ -85,4 +88,31 @@ type Participant struct {
 	Money         int         `json:"money,omitempty"`
 	Kills         int         `json:"kills,omitempty"`
 	Deaths        int         `json:"deaths,omitempty"`
+}
+
+func CreateParticipant(pl *common.Player) Participant {
+	return Participant{
+		Name:          pl.Name,
+		EntityID:      pl.EntityID,
+		Hp:            pl.Health(),
+		Armor:         pl.Armor(),
+		FlashDuration: 0.1, // Round to nearest 0.1 sec - saves space in JSON
+		Position: Position{
+			X: pl.Position().X,
+			Y: pl.Position().Y,
+			Z: pl.Position().Z,
+		},
+		AngleX:       int(pl.ViewDirectionX()),
+		AngleY:       int(pl.ViewDirectionY()),
+		HasHelmet:    pl.HasHelmet(),
+		HasDefuseKit: pl.HasDefuseKit(),
+		Equipment:    ToEntityEquipment(pl.Weapons()),
+		Team:         int(pl.Team),
+		IsDefusing:   pl.IsDefusing,
+		IsPlanting:   pl.IsPlanting,
+		Money:        pl.Money(),
+		Kills:        pl.Kills(),
+		Deaths:       pl.Deaths(),
+		IsInBuyzone:  pl.IsInBuyZone(),
+	}
 }
