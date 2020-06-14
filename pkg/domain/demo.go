@@ -5,7 +5,7 @@ import "github.com/graphql-go/graphql"
 type Demo struct {
 	Header Header
 	Ticks  []Tick
-	Events []interface{}
+	Events []GameEvent
 }
 
 func CreateDemoType(repository *DemoRepository) *graphql.Object {

@@ -9,6 +9,7 @@ type Equipment struct {
 	Type           int `json:"type"`
 	AmmoInMagazine int `json:"ammoInMagazine"`
 	AmmoReserve    int `json:"ammoReserve"`
+	AmmoType       int `json:"ammoType"`
 }
 
 var EquipmentType = graphql.NewObject(graphql.ObjectConfig{
@@ -30,12 +31,17 @@ func ToEntityEquipment(eq []*common.Equipment) []Equipment {
 	var equipmentForPlayer = make([]Equipment, 0, len(eq))
 
 	for _, equipment := range eq {
-		equipmentForPlayer = append(equipmentForPlayer, Equipment{
-			Type:           int(equipment.Type),
-			AmmoInMagazine: equipment.AmmoInMagazine(),
-			AmmoReserve:    equipment.AmmoReserve(),
-		})
+		equipmentForPlayer = append(equipmentForPlayer, ToEquipment(equipment))
 	}
 
 	return equipmentForPlayer
+}
+
+func ToEquipment(eq *common.Equipment) Equipment {
+	return Equipment{
+		Type:           int(eq.Type),
+		AmmoInMagazine: eq.AmmoInMagazine(),
+		AmmoReserve:    eq.AmmoReserve(),
+		AmmoType:       eq.AmmoType(),
+	}
 }

@@ -21,13 +21,27 @@ func RecordDemo(filePath string, freq float64) domain.Demo {
 	p := dem.NewParser(f)
 	header, _ := p.ParseHeader()
 
-	allEvents := make([]interface{}, 0)
+	allEvents := make([]domain.GameEvent, 0)
 
 	p.RegisterEventHandler(func(e events.BombPlanted) {
-		allEvents = append(allEvents, domain.BombPlanted{
-			Name:     "BOMB_PLANTED",
-			Player:   domain.CreateParticipant(e.Player),
-			Bombsite: int32(e.Site),
+		allEvents = append(allEvents, domain.GameEvent{
+			Name: "BOMB_PLANTED",
+			RealEvent: domain.BombPlanted{
+				Name:     "BOMB_PLANTED",
+				Player:   domain.CreateParticipant(e.Player),
+				Bombsite: int32(e.Site),
+			},
+		})
+	})
+
+	p.RegisterEventHandler(func(e events.WeaponFire) {
+
+		allEvents = append(allEvents, domain.GameEvent{
+			Name: "WEAPON_FIRED",
+			RealEvent: domain.WeaponFired{
+				Shooter: domain.CreateParticipant(e.Shooter),
+				Weapon:  domain.ToEquipment(e.Weapon),
+			},
 		})
 	})
 

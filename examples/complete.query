@@ -1,10 +1,5 @@
 {
-      demo(freq: 20, demoFile: "examples/test.dem") {
-        events {
-          ... on BombPlanted {
-            bombSite
-          }
-        }
+      demo(freq: 0.1, demoFile: "examples/test.dem") {
 			  header {
           mapName
           tickRate
@@ -51,7 +46,6 @@
               y
             }
           }
-          totalRoundsPlayed
         }
       }
 }

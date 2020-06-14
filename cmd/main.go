@@ -10,7 +10,7 @@ import (
 func main() {
 	demoRepository := domain.DemoRepository{}
 	log.Print("Reading User query ...")
-	userQuery := usecase.ReadQuery("examples/data.query")
+	userQuery := usecase.ReadQuery("examples/events-query.query")
 	log.Print("Creating a schema ...")
 	schema := usecase.SchemaFromDemo(demoRepository)
 	json := usecase.CreateJson(schema, userQuery)

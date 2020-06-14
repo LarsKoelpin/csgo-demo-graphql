@@ -1,0 +1,18 @@
+{
+      demo(freq: 0.1, demoFile: "examples/test.dem") {
+        events {
+          ... on BombPlanted {
+            name
+          }
+          ... on WeaponFired {
+            name
+            shooter {
+              name
+            }
+            weapon {
+              type
+            }
+          }
+      }
+ }
+}
