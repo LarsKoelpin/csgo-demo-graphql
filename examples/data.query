@@ -1,5 +1,5 @@
 {
-      demo {
+      demo(freq: 20, demoFile: "examples/test.dem") {
 			  header {
           mapName
           tickRate
@@ -9,18 +9,44 @@
           tick
           totalRoundsPlayed
           participants {
+            name
             entityId
             team
             position {
               x
+              y
             }
+            angleX
+            angleY
+            hp
+            armor
+            flashDuration
+            isNpc
+            hasHelmet
+            hasDefuseKit
+            equipment {
+              type
+              ammoInMagazine
+              ammoReserve
+            }
+            isPlanting
+            isDefusing
+            isInBuyzone
+            money
+            kills
+            deaths
           }
           bomb {
            carrier {
              entityId
-
+             name
+            }
+            lastOnGroundPosition {
+              x
+              y
             }
           }
+          totalRoundsPlayed
         }
       }
 }

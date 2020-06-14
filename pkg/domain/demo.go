@@ -7,7 +7,7 @@ type Demo struct {
 	Ticks  []Tick
 }
 
-func CreateDemoType(d Demo) *graphql.Object {
+func CreateDemoType(repository *DemoRepository) *graphql.Object {
 	return graphql.NewObject(graphql.ObjectConfig{
 		Name: "demo",
 		Fields: graphql.Fields{
@@ -16,7 +16,7 @@ func CreateDemoType(d Demo) *graphql.Object {
 				Type: HeaderType,
 				Args: nil,
 				Resolve: func(resolvParams graphql.ResolveParams) (interface{}, error) {
-					return d.Header, nil
+					return repository.CurrentDemo.Header, nil
 				},
 			},
 			"ticks": &graphql.Field{
@@ -24,9 +24,13 @@ func CreateDemoType(d Demo) *graphql.Object {
 				Type: graphql.NewList(TickType),
 				Args: nil,
 				Resolve: func(resolvParams graphql.ResolveParams) (interface{}, error) {
-					return d.Ticks, nil
+					return repository.CurrentDemo.Ticks, nil
 				},
 			},
 		},
 	})
+}
+
+type DemoRepository struct {
+	CurrentDemo Demo
 }

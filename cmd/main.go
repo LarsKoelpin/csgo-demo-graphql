@@ -1,13 +1,18 @@
 package main
 
 import (
-  usecase "github.com/larskoelpin/csgo-demo-graphql/pkg/usecase"
+	"log"
+
+	"github.com/larskoelpin/csgo-demo-graphql/pkg/domain"
+	usecase "github.com/larskoelpin/csgo-demo-graphql/pkg/usecase"
 )
 
 func main() {
-  userQuery := usecase.ReadQuery("examples/data.query")
-	demo := usecase.DemoFromFile("examples/test.dem")
-	schema := usecase.SchemaFromDemo(demo)
+	demoRepository := domain.DemoRepository{}
+	log.Print("Reading User query ...")
+	userQuery := usecase.ReadQuery("examples/data.query")
+	log.Print("Creating a schema ...")
+	schema := usecase.SchemaFromDemo(demoRepository)
 	json := usecase.CreateJson(schema, userQuery)
-	usecase.CreateJsonFile(json);
+	usecase.CreateJsonFile(json)
 }

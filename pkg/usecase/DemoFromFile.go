@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"log"
 	"math"
 	"os"
 
@@ -9,12 +10,12 @@ import (
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
 )
 
-func DemoFromFile(filePath string) domain.Demo {
-	f, _ := os.Open("/home/lars/devel/src/github.com/markus-wa/cs-demo-minifier/cmd/csminify/test.dem")
+func DemoFromFile(filePath string, freq float64) domain.Demo {
+	f, _ := os.Open("examples/test.dem")
 	p := dem.NewParser(f)
 	header, _ := p.ParseHeader()
 
-	snapshotRate := int(math.Round(header.FrameRate() / 0.1))
+	snapshotRate := int(math.Round(header.FrameRate() / 0.5))
 	renderedTicks := make([]domain.Tick, 0)
 	p.RegisterEventHandler(
 		func(e events.FrameDone) {
@@ -59,6 +60,8 @@ func DemoFromFile(filePath string) domain.Demo {
 		})
 
 	p.ParseToEnd()
+
+	log.Print("Parsing finished")
 
 	return domain.Demo{
 		Header: domain.Header{
