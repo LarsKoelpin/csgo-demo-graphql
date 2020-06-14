@@ -5,7 +5,7 @@ import "github.com/graphql-go/graphql"
 type Demo struct {
 	Header Header
 	Ticks  []Tick
-	Events []GameEvent
+	Events []interface{}
 }
 
 func CreateDemoType(repository *DemoRepository) *graphql.Object {
@@ -28,14 +28,14 @@ func CreateDemoType(repository *DemoRepository) *graphql.Object {
 					return repository.CurrentDemo.Ticks, nil
 				},
 			},
-      "events": &graphql.Field{
-        Name: "events",
-        Type: graphql.NewList(GameEventType),
-        Args: nil,
-        Resolve: func(resolvParams graphql.ResolveParams) (interface{}, error) {
-          return repository.CurrentDemo.Events, nil
-        },
-      },
+			"events": &graphql.Field{
+				Name: "events",
+				Type: graphql.NewList(GameEventType),
+				Args: nil,
+				Resolve: func(resolvParams graphql.ResolveParams) (interface{}, error) {
+					return repository.CurrentDemo.Events, nil
+				},
+			},
 		},
 	})
 }

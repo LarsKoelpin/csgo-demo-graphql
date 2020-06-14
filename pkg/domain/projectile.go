@@ -3,7 +3,7 @@ package domain
 import "github.com/graphql-go/graphql"
 
 var GrenadeProjectileType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "grenadeProjectTile",
+	Name: "GrenadeProjectTile",
 	Fields: graphql.Fields{
 		"thrower": &graphql.Field{
 			Type: ParticipantType,

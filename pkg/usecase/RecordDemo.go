@@ -5,8 +5,6 @@ import (
 	"math"
 	"os"
 
-	"github.com/larskoelpin/csgo-demo-graphql/pkg/domain/gameevents"
-
 	"github.com/larskoelpin/csgo-demo-graphql/pkg/domain"
 	dem "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs"
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
@@ -23,15 +21,13 @@ func RecordDemo(filePath string, freq float64) domain.Demo {
 	p := dem.NewParser(f)
 	header, _ := p.ParseHeader()
 
-	allEvents := make([]domain.GameEvent, 0)
+	allEvents := make([]interface{}, 0)
 
 	p.RegisterEventHandler(func(e events.BombPlanted) {
-		allEvents = append(allEvents, domain.GameEvent{
-			Name: "BOMB_PLANTED",
-			Event: gameevents.BombPlanted{
-				Player:   domain.CreateParticipant(e.Player),
-				Bombsite: int32(e.Site),
-			},
+		allEvents = append(allEvents, domain.BombPlanted{
+			Name:     "BOMB_PLANTED",
+			Player:   domain.CreateParticipant(e.Player),
+			Bombsite: int32(e.Site),
 		})
 	})
 
@@ -71,7 +67,7 @@ func RecordDemo(filePath string, freq float64) domain.Demo {
 			TickRate:     header.FrameRate(),
 			SnapshotRate: 1,
 		},
-		Ticks: renderedTicks,
+		Ticks:  renderedTicks,
 		Events: allEvents,
 	}
 }

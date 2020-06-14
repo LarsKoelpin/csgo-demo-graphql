@@ -10,7 +10,7 @@ type Tick struct {
 }
 
 var TickType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "ticks",
+	Name: "Tick",
 	Fields: graphql.Fields{
 		"tick": &graphql.Field{
 			Type: graphql.Int,

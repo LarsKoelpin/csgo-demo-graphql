@@ -9,7 +9,7 @@ type Header struct {
 }
 
 var HeaderType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "header",
+	Name: "Header",
 	Fields: graphql.Fields{
 		"mapName": &graphql.Field{
 			Type: graphql.String,

@@ -6,7 +6,7 @@ import (
 )
 
 var ParticipantType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "players",
+	Name: "Participant",
 	Fields: graphql.Fields{
 		"name": &graphql.Field{
 			Type: graphql.String,

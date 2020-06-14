@@ -1,7 +1,9 @@
 {
       demo(freq: 20, demoFile: "examples/test.dem") {
         events {
-          name
+          ... on BombPlanted {
+            bombSite
+          }
         }
 			  header {
           mapName

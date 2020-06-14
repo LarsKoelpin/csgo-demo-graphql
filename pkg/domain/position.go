@@ -9,7 +9,7 @@ type Position struct {
 }
 
 var PositionType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "position",
+	Name: "Position",
 	Fields: graphql.Fields{
 		"x": &graphql.Field{
 			Type: graphql.Float,
