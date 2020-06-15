@@ -17,6 +17,7 @@
 test.json
 examples/example.json
 *.dem
+out.json
 
 node_modules
 build/
