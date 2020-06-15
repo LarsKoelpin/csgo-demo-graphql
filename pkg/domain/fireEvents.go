@@ -6,15 +6,15 @@ import (
 )
 
 type FireStartedEvent struct {
-  Position Position `json:"position"`
-  Name     string   `json:"name"`
-  Tick     int   `json:"tick"`
+	Position Position `json:"position"`
+	Name     string   `json:"name"`
+	Tick     int      `json:"tick"`
 }
 
 type FireExpiredEvent struct {
-  Position Position `json:"position"`
-  Name     string   `json:"name"`
-  Tick     int   `json:"tick"`
+	Position Position `json:"position"`
+	Name     string   `json:"name"`
+	Tick     int      `json:"tick"`
 }
 
 func FireStarted(tick int, e events.FireGrenadeStart) GameEvent {
@@ -64,18 +64,18 @@ var FireStartedType = graphql.NewObject(graphql.ObjectConfig{
 				return x.RealEvent.(FireStartedEvent).Position, nil
 			},
 		},
-    "tick": &graphql.Field{
-      Type: graphql.Int,
-      Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-        x := p.Source.(GameEvent)
-        return x.RealEvent.(FireStartedEvent).Tick, nil
-      },
-    },
+		"tick": &graphql.Field{
+			Type: graphql.Int,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				x := p.Source.(GameEvent)
+				return x.RealEvent.(FireStartedEvent).Tick, nil
+			},
+		},
 	},
 	IsTypeOf: func(p graphql.IsTypeOfParams) bool {
 		eventName := p.Value.(GameEvent).Name
 
-		return eventName == "SMOKE_STARTED"
+		return eventName == "FIRE_STARTED"
 	},
 })
 
@@ -96,13 +96,13 @@ var FireExpiredType = graphql.NewObject(graphql.ObjectConfig{
 				return x.RealEvent.(FireExpiredEvent).Position, nil
 			},
 		},
-    "tick": &graphql.Field{
-      Type: graphql.Int,
-      Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-        x := p.Source.(GameEvent)
-        return x.RealEvent.(FireExpiredEvent).Tick, nil
-      },
-    },
+		"tick": &graphql.Field{
+			Type: graphql.Int,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				x := p.Source.(GameEvent)
+				return x.RealEvent.(FireExpiredEvent).Tick, nil
+			},
+		},
 	},
 	IsTypeOf: func(p graphql.IsTypeOfParams) bool {
 		eventName := p.Value.(GameEvent).Name
