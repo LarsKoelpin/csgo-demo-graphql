@@ -49,24 +49,28 @@ func RecordDemo(filePath string, freq float64) domain.Demo {
 	})
 
 	p.RegisterEventHandler(func(e events.SmokeExpired) {
-		allEvents = append(allEvents, domain.SmokeExpired(p.GameState().IngameTick() ,e))
+		allEvents = append(allEvents, domain.SmokeExpired(p.GameState().IngameTick(), e))
 	})
 
 	p.RegisterEventHandler(func(e events.FireGrenadeStart) {
-    allEvents = append(allEvents, domain.FireStarted(p.GameState().IngameTick() ,e))
-  })
+		allEvents = append(allEvents, domain.FireStarted(p.GameState().IngameTick(), e))
+	})
 
-  p.RegisterEventHandler(func(e events.FireGrenadeExpired) {
-    allEvents = append(allEvents, domain.FireExpired(p.GameState().IngameTick() ,e))
-  })
+	p.RegisterEventHandler(func(e events.FireGrenadeExpired) {
+		allEvents = append(allEvents, domain.FireExpired(p.GameState().IngameTick(), e))
+	})
 
-  p.RegisterEventHandler(func(e events.RoundStart) {
-    allEvents = append(allEvents, domain.RoundStarted(p.GameState().IngameTick(), e))
-  })
+	p.RegisterEventHandler(func(e events.RoundStart) {
+		allEvents = append(allEvents, domain.RoundStarted(p.GameState().IngameTick(), e))
+	})
 
-  p.RegisterEventHandler(func(e events.RoundEnd) {
-    allEvents = append(allEvents, domain.RoundEnded(p.GameState().IngameTick(), e))
-  })
+	p.RegisterEventHandler(func(e events.RoundEnd) {
+		allEvents = append(allEvents, domain.RoundEnded(p.GameState().IngameTick(), e))
+	})
+
+	p.RegisterEventHandler(func(e events.MatchStart) {
+		allEvents = append(allEvents, domain.NewMatchStartedEvent(p.GameState().IngameTick(), e))
+	})
 
 	snapshotRate := int(math.Round(header.FrameRate() / freq))
 	renderedTicks := make([]domain.Tick, 0)

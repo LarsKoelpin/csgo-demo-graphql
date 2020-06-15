@@ -38,13 +38,13 @@ func SmokeExpired(tick int, e events.SmokeExpired) GameEvent {
 type SmokeStartedEvent struct {
 	Position Position `json:"position"`
 	Name     string   `json:"name"`
-	Tick     int   `json:"tick"`
+	Tick     int      `json:"tick"`
 }
 
 type SmokeExpiredEvent struct {
 	Position Position `json:"position"`
 	Name     string   `json:"name"`
-  Tick     int   `json:"tick"`
+	Tick     int      `json:"tick"`
 }
 
 var SmokeStartedType = graphql.NewObject(graphql.ObjectConfig{
@@ -64,13 +64,13 @@ var SmokeStartedType = graphql.NewObject(graphql.ObjectConfig{
 				return x.RealEvent.(SmokeStartedEvent).Position, nil
 			},
 		},
-    "tick": &graphql.Field{
-      Type: graphql.Int,
-      Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-        x := p.Source.(GameEvent)
-        return x.RealEvent.(SmokeStartedEvent).Tick, nil
-      },
-    },
+		"tick": &graphql.Field{
+			Type: graphql.Int,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				x := p.Source.(GameEvent)
+				return x.RealEvent.(SmokeStartedEvent).Tick, nil
+			},
+		},
 	},
 	IsTypeOf: func(p graphql.IsTypeOfParams) bool {
 		eventName := p.Value.(GameEvent).Name
@@ -96,13 +96,13 @@ var SmokeExpiredType = graphql.NewObject(graphql.ObjectConfig{
 				return x.RealEvent.(SmokeExpiredEvent).Position, nil
 			},
 		},
-    "tick": &graphql.Field{
-      Type: graphql.Int,
-      Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-        x := p.Source.(GameEvent)
-        return x.RealEvent.(SmokeExpiredEvent).Tick, nil
-      },
-    },
+		"tick": &graphql.Field{
+			Type: graphql.Int,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				x := p.Source.(GameEvent)
+				return x.RealEvent.(SmokeExpiredEvent).Tick, nil
+			},
+		},
 	},
 	IsTypeOf: func(p graphql.IsTypeOfParams) bool {
 		eventName := p.Value.(GameEvent).Name

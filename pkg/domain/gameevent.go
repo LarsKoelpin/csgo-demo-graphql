@@ -20,5 +20,6 @@ var GameEventType = graphql.NewUnion(graphql.UnionConfig{
 		FireExpiredType,
 		RoundStartedType,
 		RoundEndedType,
+		MatchStartedEventTpe,
 	},
 })
