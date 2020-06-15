@@ -4,7 +4,7 @@ import "github.com/graphql-go/graphql"
 
 type Bomb struct {
 	LastOnGroundPosition Position    `json:"lastOnGroundPosition"`
-	Carrier              Participant `json:"carrier"`
+	Carrier              Player `json:"carrier"`
 }
 
 var BombType = graphql.NewObject(graphql.ObjectConfig{

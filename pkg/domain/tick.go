@@ -4,7 +4,7 @@ import "github.com/graphql-go/graphql"
 
 type Tick struct {
 	Tick              int           `json:"tick"`
-	Participants      []Participant `json:"participants"`
+	Participants      []Player `json:"participants"`
 	Bomb              Bomb          `json:"bomb"`
 	TotalRoundsPlayed int           `json:"totalRoundsPlayed"`
 }
@@ -15,7 +15,7 @@ var TickType = graphql.NewObject(graphql.ObjectConfig{
 		"tick": &graphql.Field{
 			Type: graphql.Int,
 		},
-		"participants": &graphql.Field{
+		"players": &graphql.Field{
 			Type: graphql.NewList(ParticipantType),
 		},
 		"bomb": &graphql.Field{

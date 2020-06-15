@@ -6,7 +6,7 @@ import (
 )
 
 var ParticipantType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "Participant",
+	Name: "Player",
 	Fields: graphql.Fields{
 		"name": &graphql.Field{
 			Type: graphql.String,
@@ -68,7 +68,7 @@ var ParticipantType = graphql.NewObject(graphql.ObjectConfig{
 	},
 })
 
-type Participant struct {
+type Player struct {
 	Name          string      `json:"name"`
 	EntityID      int         `json:"entityId"`
 	Team          int         `json:"team,omitempty"`
@@ -90,8 +90,8 @@ type Participant struct {
 	Deaths        int         `json:"deaths,omitempty"`
 }
 
-func CreateParticipant(pl *common.Player) Participant {
-	return Participant{
+func CreateParticipant(pl *common.Player) Player {
+	return Player{
 		Name:          pl.Name,
 		EntityID:      pl.EntityID,
 		Hp:            pl.Health(),

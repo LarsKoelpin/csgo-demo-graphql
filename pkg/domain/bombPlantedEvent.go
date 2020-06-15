@@ -6,7 +6,7 @@ import (
 
 type BombPlanted struct {
 	Name     string
-	Player   Participant
+	Player   Player
 	Bombsite int32 `json:"bombsite"`
 }
 

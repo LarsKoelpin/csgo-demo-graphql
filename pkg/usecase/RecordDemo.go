@@ -77,7 +77,7 @@ func RecordDemo(filePath string, freq float64) domain.Demo {
 	p.RegisterEventHandler(
 		func(e events.FrameDone) {
 			tick := p.CurrentFrame()
-			players := make([]domain.Participant, 0)
+			players := make([]domain.Player, 0)
 
 			if tick%snapshotRate == 0 {
 				for _, pl := range p.GameState().Participants().Playing() {

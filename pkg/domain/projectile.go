@@ -21,8 +21,8 @@ var GrenadeProjectileType = graphql.NewObject(graphql.ObjectConfig{
 })
 
 type GrenadeProjectile struct {
-	Thrower        Participant `json:"thrower"`
-	Owner          Participant `json:"owner"`
+	Thrower        Player `json:"thrower"`
+	Owner          Player `json:"owner"`
 	Trajectory     []Position  `json:"trajectory"`
 	WeaponInstance Equipment   `json:"weapon"`
 	Position       Position    `json:"position"`

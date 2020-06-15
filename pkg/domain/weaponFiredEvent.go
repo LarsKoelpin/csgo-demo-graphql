@@ -6,7 +6,7 @@ import (
 
 type WeaponFired struct {
 	Name    string      `json:"name"`
-	Shooter Participant `json:"shooter"`
+	Shooter Player `json:"shooter"`
 	Weapon  Equipment   `json:"weapon"`
 }
 
