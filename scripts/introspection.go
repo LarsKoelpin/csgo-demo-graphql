@@ -112,11 +112,74 @@ fragment TypeRef on __Type {
 }
 `
 
+var completeQuery = `
+{
+      demo(freq: 0.1) {
+			  header {
+          mapName
+          tickRate
+          snapshotRate
+        }
+        ticks {
+          tick
+          totalRoundsPlayed
+          participants {
+            name
+            entityId
+            team
+            position {
+              x
+              y
+            }
+            angleX
+            angleY
+            hp
+            armor
+            flashDuration
+            isNpc
+            hasHelmet
+            hasDefuseKit
+            equipment {
+              type
+              ammoInMagazine
+              ammoReserve
+            }
+            isPlanting
+            isDefusing
+            isInBuyzone
+            money
+            kills
+            deaths
+          }
+          bomb {
+           carrier {
+             entityId
+             name
+            }
+            lastOnGroundPosition {
+              x
+              y
+            }
+          }
+        }
+      }
+}
+`
+
 func main() {
 	demoRepository := domain.DemoRepository{}
 	log.Print("Reading User query ...")
 	log.Print("Creating a schema ...")
-	schema := usecase.SchemaFromDemo("", demoRepository)
-	json := usecase.CreateJson(schema, introspectionQuery)
-	usecase.CreateJsonFile("/home/lars/devel/src/github.com/larskoelpin/csgo-demo-graphql/docs/api-explorer/src/schema.json", json)
+	schema := usecase.SchemaFromDemo("test.dem", demoRepository)
+	introspection := usecase.CreateJson(schema, introspectionQuery)
+	usecase.CreateJsonFile("/home/lars/devel/src/github.com/larskoelpin/csgo-demo-graphql/docs/api-explorer/src/schema.json", introspection)
+	testdata := usecase.CreateJson(
+		schema,
+		completeQuery,
+	)
+	usecase.CreateJsonFile(
+		"/home/lars/devel/src/github.com/larskoelpin/csgo-demo-graphql/docs/api-explorer/src/data.json",
+		testdata,
+	)
+
 }
