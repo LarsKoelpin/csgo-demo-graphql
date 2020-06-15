@@ -16,3 +16,6 @@
 
 test.json
 *.dem
+
+node_modules
+build/
