@@ -123,7 +123,7 @@ var completeQuery = `
         ticks {
           tick
           totalRoundsPlayed
-          participants {
+          players {
             name
             entityId
             team
