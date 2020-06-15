@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.js": "/csgo-demo-graphql/static/js/main.5c7a45a6.chunk.js",
-    "main.js.map": "/csgo-demo-graphql/static/js/main.5c7a45a6.chunk.js.map",
+    "main.js": "/csgo-demo-graphql/static/js/main.ff2a56c1.chunk.js",
+    "main.js.map": "/csgo-demo-graphql/static/js/main.ff2a56c1.chunk.js.map",
     "runtime-main.js": "/csgo-demo-graphql/static/js/runtime-main.e99adeae.js",
     "runtime-main.js.map": "/csgo-demo-graphql/static/js/runtime-main.e99adeae.js.map",
     "static/css/2.ae68f578.chunk.css": "/csgo-demo-graphql/static/css/2.ae68f578.chunk.css",
-    "static/js/2.f777f1be.chunk.js": "/csgo-demo-graphql/static/js/2.f777f1be.chunk.js",
-    "static/js/2.f777f1be.chunk.js.map": "/csgo-demo-graphql/static/js/2.f777f1be.chunk.js.map",
+    "static/js/2.0be60282.chunk.js": "/csgo-demo-graphql/static/js/2.0be60282.chunk.js",
+    "static/js/2.0be60282.chunk.js.map": "/csgo-demo-graphql/static/js/2.0be60282.chunk.js.map",
     "index.html": "/csgo-demo-graphql/index.html",
-    "precache-manifest.c04f2b1c5ab0187b878095609ac91447.js": "/csgo-demo-graphql/precache-manifest.c04f2b1c5ab0187b878095609ac91447.js",
+    "precache-manifest.2996bcac09594a8db05224f215da4c8a.js": "/csgo-demo-graphql/precache-manifest.2996bcac09594a8db05224f215da4c8a.js",
     "service-worker.js": "/csgo-demo-graphql/service-worker.js",
     "static/css/2.ae68f578.chunk.css.map": "/csgo-demo-graphql/static/css/2.ae68f578.chunk.css.map",
-    "static/js/2.f777f1be.chunk.js.LICENSE.txt": "/csgo-demo-graphql/static/js/2.f777f1be.chunk.js.LICENSE.txt"
+    "static/js/2.0be60282.chunk.js.LICENSE.txt": "/csgo-demo-graphql/static/js/2.0be60282.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.e99adeae.js",
     "static/css/2.ae68f578.chunk.css",
-    "static/js/2.f777f1be.chunk.js",
-    "static/js/main.5c7a45a6.chunk.js"
+    "static/js/2.0be60282.chunk.js",
+    "static/js/main.ff2a56c1.chunk.js"
   ]
 }
