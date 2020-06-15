@@ -60,6 +60,14 @@ func RecordDemo(filePath string, freq float64) domain.Demo {
     allEvents = append(allEvents, domain.FireExpired(p.GameState().IngameTick() ,e))
   })
 
+  p.RegisterEventHandler(func(e events.RoundStart) {
+    allEvents = append(allEvents, domain.RoundStarted(p.GameState().IngameTick(), e))
+  })
+
+  p.RegisterEventHandler(func(e events.RoundEnd) {
+    allEvents = append(allEvents, domain.RoundEnded(p.GameState().IngameTick(), e))
+  })
+
 	snapshotRate := int(math.Round(header.FrameRate() / freq))
 	renderedTicks := make([]domain.Tick, 0)
 	p.RegisterEventHandler(
