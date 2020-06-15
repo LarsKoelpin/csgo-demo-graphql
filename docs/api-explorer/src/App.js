@@ -3,7 +3,7 @@ import "graphiql/graphiql.min.css";
 import {GraphiQL} from "graphiql";
 import {mockServer} from "graphql-tools";
 import {buildClientSchema, printSchema} from "graphql/utilities";
-import schema from "./schema";
+import schema from "./schema.json";
 
 const defaultQuery = `
 {
@@ -20,6 +20,7 @@ const defaultQuery = `
   }
 }
 `;
+console.log(schema)
 
 const x = buildClientSchema(schema.data);
 const rawSchema = printSchema(x);
