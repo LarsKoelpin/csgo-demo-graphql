@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.js": "/static/js/main.88d035dd.chunk.js",
-    "main.js.map": "/static/js/main.88d035dd.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.85886201.js",
-    "runtime-main.js.map": "/static/js/runtime-main.85886201.js.map",
-    "static/css/2.ae68f578.chunk.css": "/static/css/2.ae68f578.chunk.css",
-    "static/js/2.3031ad33.chunk.js": "/static/js/2.3031ad33.chunk.js",
-    "static/js/2.3031ad33.chunk.js.map": "/static/js/2.3031ad33.chunk.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.b0ff4832d1d5d72efa1407c4c86f71f6.js": "/precache-manifest.b0ff4832d1d5d72efa1407c4c86f71f6.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/2.ae68f578.chunk.css.map": "/static/css/2.ae68f578.chunk.css.map",
-    "static/js/2.3031ad33.chunk.js.LICENSE.txt": "/static/js/2.3031ad33.chunk.js.LICENSE.txt"
+    "main.js": "/csgo-demo-graphql/static/js/main.5c7a45a6.chunk.js",
+    "main.js.map": "/csgo-demo-graphql/static/js/main.5c7a45a6.chunk.js.map",
+    "runtime-main.js": "/csgo-demo-graphql/static/js/runtime-main.e99adeae.js",
+    "runtime-main.js.map": "/csgo-demo-graphql/static/js/runtime-main.e99adeae.js.map",
+    "static/css/2.ae68f578.chunk.css": "/csgo-demo-graphql/static/css/2.ae68f578.chunk.css",
+    "static/js/2.f777f1be.chunk.js": "/csgo-demo-graphql/static/js/2.f777f1be.chunk.js",
+    "static/js/2.f777f1be.chunk.js.map": "/csgo-demo-graphql/static/js/2.f777f1be.chunk.js.map",
+    "index.html": "/csgo-demo-graphql/index.html",
+    "precache-manifest.c04f2b1c5ab0187b878095609ac91447.js": "/csgo-demo-graphql/precache-manifest.c04f2b1c5ab0187b878095609ac91447.js",
+    "service-worker.js": "/csgo-demo-graphql/service-worker.js",
+    "static/css/2.ae68f578.chunk.css.map": "/csgo-demo-graphql/static/css/2.ae68f578.chunk.css.map",
+    "static/js/2.f777f1be.chunk.js.LICENSE.txt": "/csgo-demo-graphql/static/js/2.f777f1be.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.85886201.js",
+    "static/js/runtime-main.e99adeae.js",
     "static/css/2.ae68f578.chunk.css",
-    "static/js/2.3031ad33.chunk.js",
-    "static/js/main.88d035dd.chunk.js"
+    "static/js/2.f777f1be.chunk.js",
+    "static/js/main.5c7a45a6.chunk.js"
   ]
 }
