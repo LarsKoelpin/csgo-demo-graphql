@@ -20,10 +20,8 @@ const defaultQuery = `
   }
 }
 `;
-console.log(schema)
 
 const x = buildClientSchema(schema.data);
-const rawSchema = printSchema(x);
 
 const myMockServer = mockServer(x, {
   demo: () => ({
