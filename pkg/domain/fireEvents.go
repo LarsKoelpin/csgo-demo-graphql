@@ -17,7 +17,7 @@ type FireExpiredEvent struct {
   Tick     int   `json:"tick"`
 }
 
-func FireStarted(tick int, e events.SmokeStart) GameEvent {
+func FireStarted(tick int, e events.FireGrenadeStart) GameEvent {
 	return GameEvent{
 		Name: "FIRE_STARTED",
 		RealEvent: FireStartedEvent{
@@ -32,7 +32,7 @@ func FireStarted(tick int, e events.SmokeStart) GameEvent {
 	}
 }
 
-func FireExpired(tick int, e events.SmokeExpired) GameEvent {
+func FireExpired(tick int, e events.FireGrenadeExpired) GameEvent {
 	return GameEvent{
 		Name: "FIRE_EXPIRED",
 		RealEvent: FireExpiredEvent{

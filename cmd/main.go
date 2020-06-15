@@ -14,5 +14,5 @@ func main() {
 	log.Print("Creating a schema ...")
 	schema := usecase.SchemaFromDemo(demoRepository)
 	json := usecase.CreateJson(schema, userQuery)
-	usecase.CreateJsonFile("examples/s.json", json)
+	usecase.CreateJsonFile("examples/example.json", json)
 }

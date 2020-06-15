@@ -14,5 +14,9 @@ var GameEventType = graphql.NewUnion(graphql.UnionConfig{
 	Types: []*graphql.Object{
 		BombPlantedType,
 		WeaponFiredType,
+		SmokeStartedType,
+		SmokeExpiredType,
+		FireStartedType,
+		FireExpiredType,
 	},
 })

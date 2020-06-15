@@ -15,6 +15,7 @@
 # vendor/
 
 test.json
+examples/example.json
 *.dem
 
 node_modules

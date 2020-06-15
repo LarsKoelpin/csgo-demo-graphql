@@ -1,6 +1,22 @@
 {
       demo(freq: 0.1, demoFile: "examples/test.dem") {
-        events {
+        events(type: ["SMOKE_STARTED", "SMOKE_EXPIRED"]) {
+          ... on SmokeStarted {
+            name
+            tick
+            position {
+              x
+            }
+          }
+
+           ... on SmokeExpired {
+                      name
+                      tick
+                      position {
+                        x
+                      }
+                    }
+
           ... on BombPlanted {
             name
           }
