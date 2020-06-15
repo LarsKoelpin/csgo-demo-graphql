@@ -3,10 +3,10 @@ package domain
 import "github.com/graphql-go/graphql"
 
 type Tick struct {
-	Tick              int           `json:"tick"`
-	Participants      []Player `json:"participants"`
-	Bomb              Bomb          `json:"bomb"`
-	TotalRoundsPlayed int           `json:"totalRoundsPlayed"`
+	Tick              int      `json:"tick"`
+	Participants      []Player `json:"players"`
+	Bomb              Bomb     `json:"bomb"`
+	TotalRoundsPlayed int      `json:"totalRoundsPlayed"`
 }
 
 var TickType = graphql.NewObject(graphql.ObjectConfig{

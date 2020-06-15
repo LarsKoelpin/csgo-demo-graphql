@@ -3,6 +3,7 @@ package domain
 import (
 	"github.com/graphql-go/graphql"
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/common"
+  "math"
 )
 
 var ParticipantType = graphql.NewObject(graphql.ObjectConfig{
@@ -96,7 +97,7 @@ func CreateParticipant(pl *common.Player) Player {
 		EntityID:      pl.EntityID,
 		Hp:            pl.Health(),
 		Armor:         pl.Armor(),
-		FlashDuration: 0.1, // Round to nearest 0.1 sec - saves space in JSON
+		FlashDuration: float32(math.Round(float64(pl.FlashDuration*100))/100),
 		Position: Position{
 			X: pl.Position().X,
 			Y: pl.Position().Y,

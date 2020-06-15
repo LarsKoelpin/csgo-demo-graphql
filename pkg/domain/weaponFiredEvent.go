@@ -5,9 +5,9 @@ import (
 )
 
 type WeaponFired struct {
-	Name    string      `json:"name"`
-	Shooter Player `json:"shooter"`
-	Weapon  Equipment   `json:"weapon"`
+	Name    string    `json:"name"`
+	Shooter Player    `json:"shooter"`
+	Weapon  Equipment `json:"weapon"`
 }
 
 var WeaponFiredType = graphql.NewObject(graphql.ObjectConfig{
