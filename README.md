@@ -7,17 +7,17 @@ It only respects the attributes, which the user specifies in the query, therefor
 any data resulting in a bloated JSON.
 
 
-# How to run
+## How to run
 
 Run using
 ```bash
-csgodemo path/to/query.query
+csgodemo --query query.query --demo demo.dem
 ```
 
 where the **query.query** is a file containing a graphQL query.
 ```graphql
 {
-  demo(freq: 0.2, demoFile: "asd") {
+  demo(freq: 0.2) {
     header {
       mapName
     }
@@ -29,11 +29,30 @@ where the **query.query** is a file containing a graphQL query.
   }
 }
 ```
-Where 
-* **freq** is the recording FPS. 
-* **demoFile**  is the path to the demoFile.
+Where **freq** is the recording FPS. 
 
-For creation purposes, you can use the interactive Graphiql tool available at
+It creates a File named out.json containing all data. 
+```bash
+ls
++ out.json
+```
+
+
+For exploring purposes, you can use the interactive Graphiql tool available at
 
 https://larskoelpin.github.io/csgo-demo-graphql/
+
+
+## Considerations
+If you want to send the json over the wire, try deflateing it using gzip
+
+creates a File named out.json 
+```bash
+gzip out.json //out.json.gz
+```
+inflate using
+```bash
+gzip -d out.json.gz
+```
+
 
