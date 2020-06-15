@@ -9,7 +9,7 @@ import (
 	"github.com/larskoelpin/csgo-demo-graphql/pkg/domain"
 )
 
-func SchemaFromDemo(repository domain.DemoRepository) graphql.Schema {
+func SchemaFromDemo(demoFile string, repository domain.DemoRepository) graphql.Schema {
 	demoType := domain.CreateDemoType(&repository)
 	rootQuery := graphql.ObjectConfig{Name: "RootQuery", Fields: graphql.Fields{
 		"demo": {
@@ -19,25 +19,16 @@ func SchemaFromDemo(repository domain.DemoRepository) graphql.Schema {
 				"freq": &graphql.ArgumentConfig{
 					Type: graphql.NewNonNull(graphql.Float),
 				},
-				"demoFile": &graphql.ArgumentConfig{
-					Type: graphql.String,
-				},
 			},
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				freq := p.Args["freq"]
-				demoFile := p.Args["demoFile"]
-				str, okFile := demoFile.(string)
-				if !okFile {
-					log.Print("Invalid Demo File Name")
-					os.Exit(0)
-				}
 				theFreq, okFreq := freq.(float64)
 				if !okFreq {
 					log.Print("Invalid Frequency Value")
 					os.Exit(0)
 				}
-				newDemo := RecordDemo(str, theFreq)
-				log.Print("The Demo " + str + " was queried using freq" + fmt.Sprintf("%f", freq))
+				newDemo := RecordDemo(demoFile, theFreq)
+				log.Print("The Demo " + demoFile + " was queried using freq" + fmt.Sprintf("%f", freq))
 				repository.CurrentDemo = newDemo
 				return repository.CurrentDemo, nil
 			},

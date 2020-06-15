@@ -1,11 +1,15 @@
 package main
 
 import (
-  "github.com/larskoelpin/csgo-demo-graphql/pkg/domain"
-  "github.com/larskoelpin/csgo-demo-graphql/pkg/usecase"
-  "log"
+	"log"
+
+	"github.com/larskoelpin/csgo-demo-graphql/pkg/domain"
+	"github.com/larskoelpin/csgo-demo-graphql/pkg/usecase"
 )
 
+/**
+ * Works on my machine :eyebrows:
+ */
 var introspectionQuery = `
 query IntrospectionQuery {
   __schema {
@@ -109,10 +113,10 @@ fragment TypeRef on __Type {
 `
 
 func main() {
-  demoRepository := domain.DemoRepository{}
-  log.Print("Reading User query ...")
-  log.Print("Creating a schema ...")
-  schema := usecase.SchemaFromDemo(demoRepository)
-  json := usecase.CreateJson(schema, introspectionQuery)
-  usecase.CreateJsonFile("/home/lars/devel/src/github.com/larskoelpin/csgo-demo-graphql/docs/api-explorer/src/schema.json", json)
+	demoRepository := domain.DemoRepository{}
+	log.Print("Reading User query ...")
+	log.Print("Creating a schema ...")
+	schema := usecase.SchemaFromDemo("", demoRepository)
+	json := usecase.CreateJson(schema, introspectionQuery)
+	usecase.CreateJsonFile("/home/lars/devel/src/github.com/larskoelpin/csgo-demo-graphql/docs/api-explorer/src/schema.json", json)
 }
