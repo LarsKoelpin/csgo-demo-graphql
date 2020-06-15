@@ -1,0 +1,115 @@
+
+{
+  demo(freq: 20) {
+    header {
+      mapName
+    }
+    events(type: [
+      "MATCH_STARTED",
+      "ROUND_STARTED",
+      "ROUND_ENDED",
+      "FIRE_STARTED",
+      "FIRE_EXPIRED",
+      "SMOKE_STARTED",
+      "SMOKE_EXPIRED",
+      "WEAPON_FIRED",
+      "FLASH_EXPLOSION"
+    ]) {
+     ... on FlashExplosion {
+       name
+       position {
+         x
+         y
+       }
+     }
+      ... on MatchStarted {
+        name
+      }
+      ... on WeaponFired {
+        name
+        shooter {
+          entityId
+        }
+      }
+      ... on RoundEnded {
+        name
+        tick
+      }
+
+      ... on RoundStarted {
+        name
+        tick
+      }
+
+      ... on SmokeStarted {
+        name
+        position {
+          x
+          y
+        }
+        tick
+      }
+
+      ... on SmokeExpired {
+        name
+        position {
+          x
+          y
+        }
+        tick
+      }
+
+
+      ... on FireStarted {
+        name
+        position {
+          x
+          y
+        }
+        tick
+      }
+
+      ... on FireExpired {
+        name
+        position {
+          x
+          y
+        }
+        tick
+      }
+
+    }
+    ticks {
+      totalRoundsPlayed
+      players {
+        name
+        armor
+        hp
+        deaths
+        kills
+        equipment {
+          ammoInMagazine
+          ammoReserve
+          type
+        }
+        flashDuration
+        hasDefuseKit
+        hasHelmet
+        kills
+        money
+        name
+        team
+        position {
+          x
+          y
+        }
+        equipment {
+          ammoInMagazine
+          ammoReserve
+          type
+        }
+      }
+    }
+  }
+}
+

@@ -1,9 +1,16 @@
 {
-      demo(freq: 0.1, demoFile: "examples/test.dem") {
+      demo(freq: 0.1) {
 			  header {
           mapName
           tickRate
           snapshotRate
+        }
+        events(type: ["WEAPON_FIRED"]) {
+          ... on WeaponFired {
+            shooter {
+              entityId
+            }
+          }
         }
         ticks {
           tick

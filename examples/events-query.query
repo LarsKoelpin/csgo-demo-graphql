@@ -1,7 +1,22 @@
 {
-      demo(freq: 0.1, demoFile: "examples/test.dem") {
-        events(type: ["SMOKE_STARTED", "SMOKE_EXPIRED"]) {
-          ... on SmokeStarted {
+      demo(freq: 0.1) {
+        events(type: ["MATCH_STARTED"]) {
+
+        ... on MatchStarted {
+
+          name
+          tick
+        }
+
+        ... on RoundStarted {
+          name
+        }
+
+        ... on RoundEnded {
+           name
+        }
+
+          ... on FireStarted {
             name
             tick
             position {
@@ -9,7 +24,7 @@
             }
           }
 
-           ... on SmokeExpired {
+           ... on FireExpired {
                       name
                       tick
                       position {
