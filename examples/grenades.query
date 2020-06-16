@@ -1,0 +1,18 @@
+
+{
+  demo(freq: 0.2) {
+    ticks {
+      tick
+      grenades {
+        weapon {
+          type
+        }
+        position {
+          x
+          y
+        }
+      }
+    }
+  }
+}
+

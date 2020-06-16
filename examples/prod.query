@@ -84,6 +84,8 @@
       players {
         name
         armor
+        angleX
+        angleY
         hp
         deaths
         kills
