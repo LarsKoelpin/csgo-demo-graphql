@@ -6,6 +6,22 @@ any data resulting in a bloated JSON.
 
 ## How to run
 
+## Build
+If you want to build the app, clone the repository and run
+```bash
+go build cmd/main.go
+```
+
+For building the webserver run 
+
+```bash
+go build cmd/webserver.go
+```
+
+It builds a binary called **main** or **webserver**.
+
+## Execute the application
+
 Run using
 
 ```bash
