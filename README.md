@@ -42,6 +42,15 @@ For exploring purposes, you can use the interactive Graphiql tool available at
 
 https://larskoelpin.github.io/csgo-demo-graphql/
 
+### Run as Webserver
+There is also 
+```bash 
+csgodemo --query query.query --port 8080
+```
+
+This hosts a simple HTTP-Server listening on Port 8080. It accepts any request containing a CS:GO Binary.
+Please do not use this for public facing apps!
+
 ## Considerations
 
 If you want to send the json over the wire, try deflateing it using gzip
