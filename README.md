@@ -1,5 +1,3 @@
-# Under Development
-
 # CSGO Demo Renderer
 
 A CSGO Demo renderer using GraphQL. It takes a CSGO Demo in binary format and encodes it into JSON.
