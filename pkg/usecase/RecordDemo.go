@@ -1,24 +1,17 @@
 package usecase
 
 import (
+	"io"
 	"log"
 	"math"
-	"os"
 
 	"github.com/larskoelpin/csgo-demo-graphql/pkg/domain"
 	dem "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs"
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
 )
 
-func RecordDemo(filePath string, freq float64) domain.Demo {
-	f, err := os.Open(filePath)
-	log.Print("Recording demo ", filePath)
-
-	if err != nil {
-		log.Print("File not found!", filePath)
-		os.Exit(0)
-	}
-	p := dem.NewParser(f)
+func RecordDemo(file io.Reader, freq float64) domain.Demo {
+	p := dem.NewParser(file)
 	header, _ := p.ParseHeader()
 
 	allEvents := make([]domain.GameEvent, 0)
@@ -105,12 +98,7 @@ func RecordDemo(filePath string, freq float64) domain.Demo {
 			}
 		})
 
-	err = p.ParseToEnd()
-
-	if err != nil {
-		log.Print("Error when paring the demo", err)
-		os.Exit(0)
-	}
+	p.ParseToEnd()
 
 	log.Print("Recording finished")
 

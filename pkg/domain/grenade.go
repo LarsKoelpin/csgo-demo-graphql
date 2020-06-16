@@ -19,9 +19,9 @@ func NewProjectile(e common.GrenadeProjectile) Grenade {
 var GrenadeProjectileType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Grenade",
 	Fields: graphql.Fields{
-	  "tick": &graphql.Field{
-	    Type: graphql.Int,
-    },
+		"tick": &graphql.Field{
+			Type: graphql.Int,
+		},
 		"thrower": &graphql.Field{
 			Type: PlayerType,
 		},
@@ -29,8 +29,8 @@ var GrenadeProjectileType = graphql.NewObject(graphql.ObjectConfig{
 			Type: PlayerType,
 		},
 		"position": &graphql.Field{
-      Type: PositionType,
-    },
+			Type: PositionType,
+		},
 		"trajectory": &graphql.Field{
 			Type: graphql.NewList(PositionType),
 		},

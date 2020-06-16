@@ -45,7 +45,11 @@ func main() {
 	log.Print("Reading User query ...")
 	userQuery := usecase.ReadQuery(*freqPtr)
 	log.Print("Creating a schema ...")
-	schema := usecase.SchemaFromDemo(*inPath, demoRepository)
+	file, err := os.Open(*inPath)
+	if err != nil {
+		log.Fatal("DemoFile does not exist")
+	}
+	schema := usecase.SchemaFromDemo(file, demoRepository)
 	json := usecase.CreateJson(schema, userQuery)
 	usecase.CreateJsonFile("out.json", json)
 }

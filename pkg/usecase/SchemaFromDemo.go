@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
 
@@ -9,7 +10,7 @@ import (
 	"github.com/larskoelpin/csgo-demo-graphql/pkg/domain"
 )
 
-func SchemaFromDemo(demoFile string, repository domain.DemoRepository) graphql.Schema {
+func SchemaFromDemo(demoFile io.Reader, repository domain.DemoRepository) graphql.Schema {
 	demoType := domain.CreateDemoType(&repository)
 	rootQuery := graphql.ObjectConfig{Name: "RootQuery", Fields: graphql.Fields{
 		"demo": {
@@ -28,7 +29,7 @@ func SchemaFromDemo(demoFile string, repository domain.DemoRepository) graphql.S
 					os.Exit(0)
 				}
 				newDemo := RecordDemo(demoFile, theFreq)
-				log.Print("The Demo " + demoFile + " was queried using freq" + fmt.Sprintf("%f", freq))
+				log.Print("The Demo was queried using freq" + fmt.Sprintf("%f", freq))
 				repository.CurrentDemo = newDemo
 				return repository.CurrentDemo, nil
 			},

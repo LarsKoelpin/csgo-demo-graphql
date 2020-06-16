@@ -16,6 +16,7 @@ func CreateJson(schema graphql.Schema, query string) string {
 	}
 	log.Print("Start mashalling ...")
 	rJSON, _ := json.Marshal(r)
+	log.Print("Finished mashalling ...")
 
 	return string(rJSON)
 }
