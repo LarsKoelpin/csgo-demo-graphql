@@ -1,6 +1,9 @@
 package domain
 
-import "github.com/graphql-go/graphql"
+import (
+	"github.com/golang/geo/r3"
+	"github.com/graphql-go/graphql"
+)
 
 type Position struct {
 	X float64 `json:"x"`
@@ -22,3 +25,23 @@ var PositionType = graphql.NewObject(graphql.ObjectConfig{
 		},
 	},
 })
+
+func FromVector(e r3.Vector) Position {
+	return Position{
+		X: e.X,
+		Y: e.Y,
+		Z: e.Z,
+	}
+}
+
+func FromVectors(e []r3.Vector) []Position {
+	result := make([]Position, len(e))
+	for _, val := range e {
+		result = append(result, Position{
+			X: val.X,
+			Y: val.Y,
+			Z: val.Z,
+		})
+	}
+	return result
+}

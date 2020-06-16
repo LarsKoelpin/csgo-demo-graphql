@@ -22,7 +22,7 @@ var BombPlantedType = graphql.NewObject(graphql.ObjectConfig{
 		},
 		"player": &graphql.Field{
 			Name: "player",
-			Type: ParticipantType,
+			Type: PlayerType,
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				x := p.Source.(GameEvent)
 				return x.RealEvent.(BombPlanted).Player, nil

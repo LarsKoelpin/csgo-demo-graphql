@@ -31,13 +31,13 @@ func ToEntityEquipment(eq []*common.Equipment) []Equipment {
 	var equipmentForPlayer = make([]Equipment, 0, len(eq))
 
 	for _, equipment := range eq {
-		equipmentForPlayer = append(equipmentForPlayer, ToEquipment(equipment))
+		equipmentForPlayer = append(equipmentForPlayer, FromEquipment(equipment))
 	}
 
 	return equipmentForPlayer
 }
 
-func ToEquipment(eq *common.Equipment) Equipment {
+func FromEquipment(eq *common.Equipment) Equipment {
 	return Equipment{
 		Type:           int(eq.Type),
 		AmmoInMagazine: eq.AmmoInMagazine(),

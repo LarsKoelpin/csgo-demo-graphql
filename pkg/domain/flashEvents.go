@@ -6,9 +6,9 @@ import (
 )
 
 type FlashExplosionEvent struct {
-  Position Position `json:"position"`
-  Name     string   `json:"name"`
-  Tick     int      `json:"tick"`
+	Position Position `json:"position"`
+	Name     string   `json:"name"`
+	Tick     int      `json:"tick"`
 }
 
 func NewFlashExplosion(tick int, e events.FlashExplode) GameEvent {

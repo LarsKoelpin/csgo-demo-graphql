@@ -39,7 +39,7 @@ func RecordDemo(filePath string, freq float64) domain.Demo {
 			Name: "WEAPON_FIRED",
 			RealEvent: domain.WeaponFired{
 				Shooter: domain.CreateParticipant(e.Shooter),
-				Weapon:  domain.ToEquipment(e.Weapon),
+				Weapon:  domain.FromEquipment(e.Weapon),
 			},
 		})
 	})
@@ -73,8 +73,8 @@ func RecordDemo(filePath string, freq float64) domain.Demo {
 	})
 
 	p.RegisterEventHandler(func(e events.FlashExplode) {
-	  allEvents = append(allEvents, domain.NewFlashExplosion(p.GameState().IngameTick(), e))
-  })
+		allEvents = append(allEvents, domain.NewFlashExplosion(p.GameState().IngameTick(), e))
+	})
 
 	snapshotRate := int(math.Round(header.FrameRate() / freq))
 	renderedTicks := make([]domain.Tick, 0)
@@ -82,6 +82,7 @@ func RecordDemo(filePath string, freq float64) domain.Demo {
 		func(e events.FrameDone) {
 			tick := p.CurrentFrame()
 			players := make([]domain.Player, 0)
+			grenades := make([]domain.Grenade, 0)
 
 			if tick%snapshotRate == 0 {
 				for _, pl := range p.GameState().Participants().Playing() {
@@ -89,9 +90,16 @@ func RecordDemo(filePath string, freq float64) domain.Demo {
 
 					players = append(players, e)
 				}
+
+				for _, grenade := range p.GameState().GrenadeProjectiles() {
+					e := domain.NewProjectile(*grenade)
+					grenades = append(grenades, e)
+				}
+
 				renderedTicks = append(renderedTicks, domain.Tick{
 					Tick:              tick,
-					Participants:      players,
+					Players:           players,
+					Grenades:          grenades,
 					TotalRoundsPlayed: p.GameState().TotalRoundsPlayed(),
 				})
 			}

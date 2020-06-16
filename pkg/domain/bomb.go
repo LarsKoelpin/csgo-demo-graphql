@@ -14,7 +14,7 @@ var BombType = graphql.NewObject(graphql.ObjectConfig{
 			Type: PositionType,
 		},
 		"carrier": &graphql.Field{
-			Type: ParticipantType,
+			Type: PlayerType,
 		},
 	},
 })

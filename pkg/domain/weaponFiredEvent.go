@@ -22,7 +22,7 @@ var WeaponFiredType = graphql.NewObject(graphql.ObjectConfig{
 		},
 		"shooter": &graphql.Field{
 			Name: "shooter",
-			Type: ParticipantType,
+			Type: PlayerType,
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				x := p.Source.(GameEvent)
 				event := x.RealEvent.(WeaponFired)
