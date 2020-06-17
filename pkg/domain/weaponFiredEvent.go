@@ -8,6 +8,7 @@ type WeaponFired struct {
 	Name    string    `json:"name"`
 	Shooter Player    `json:"shooter"`
 	Weapon  Equipment `json:"weapon"`
+	Tick    int       `json:"tick"`
 }
 
 var WeaponFiredType = graphql.NewObject(graphql.ObjectConfig{
@@ -36,6 +37,15 @@ var WeaponFiredType = graphql.NewObject(graphql.ObjectConfig{
 				x := p.Source.(GameEvent)
 				event := x.RealEvent.(WeaponFired)
 				return event.Weapon, nil
+			},
+		},
+		"tick": &graphql.Field{
+			Name: "tick",
+			Type: graphql.Int,
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				x := p.Source.(GameEvent)
+				event := x.RealEvent.(WeaponFired)
+				return event.Tick, nil
 			},
 		},
 	},
