@@ -1,4 +1,5 @@
 # CSGO Demo Renderer
+[![Go Report Card](https://goreportcard.com/badge/github.com/LarsKoelpin/csgo-demo-graphql)](https://goreportcard.com/report/github.com/LarsKoelpin/csgo-demo-graphql)
 
 A CSGO Demo renderer using GraphQL. It takes a CSGO Demo in binary format and encodes it into JSON.
 It only respects the attributes, which the user specifies in the query, therefore not over or underfetching
