@@ -9,8 +9,8 @@ import (
 
 // Demo represents the json of a whole demo.
 type Demo struct {
-	Header Header `json:"header"`
-	Ticks  []Tick `json:"ticks"`
+	Header Header      `json:"header"`
+	Ticks  []Tick      `json:"ticks"`
 	Events []GameEvent `json:"events"`
 }
 

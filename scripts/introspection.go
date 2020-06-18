@@ -2,9 +2,9 @@ package main
 
 import (
 	"log"
-  "os"
+	"os"
 
-  "github.com/larskoelpin/csgo-demo-graphql/pkg/domain"
+	"github.com/larskoelpin/csgo-demo-graphql/pkg/domain"
 	"github.com/larskoelpin/csgo-demo-graphql/pkg/usecase"
 )
 
@@ -172,7 +172,7 @@ func main() {
 	demoRepository := domain.DemoRepository{}
 	log.Print("Reading User query ...")
 	log.Print("Creating a schema ...")
-	file,_ := os.Open("test.dem");
+	file, _ := os.Open("test.dem")
 	schema := usecase.SchemaFromDemo(file, demoRepository)
 	introspection := usecase.CreateJson(schema, introspectionQuery)
 	usecase.CreateJsonFile("/home/lars/devel/src/github.com/larskoelpin/csgo-demo-graphql/docs/api-explorer/src/schema.json", introspection)

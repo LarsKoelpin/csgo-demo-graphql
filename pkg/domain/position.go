@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"github.com/golang/geo/r2"
 	"github.com/golang/geo/r3"
 	"github.com/graphql-go/graphql"
 )
@@ -25,6 +26,25 @@ var PositionType = graphql.NewObject(graphql.ObjectConfig{
 		},
 	},
 })
+
+// FromPoints creats a position array from a point array.
+func FromPoints(e []r2.Point) []Position {
+	result := make([]Position, 0)
+	for _, x := range e {
+		result = append(result, FromPoint(x))
+	}
+
+	return result
+}
+
+// FromPoints creats a position array from a point array.
+func FromPoint(e r2.Point) Position {
+	return Position{
+		X: e.X,
+		Y: e.Y,
+		Z: 0,
+	}
+}
 
 func FromVector(e r3.Vector) Position {
 	return Position{

@@ -5,7 +5,7 @@ import (
 	"log"
 	"math"
 
-  dem "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs"
+	dem "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs"
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
 )
 
@@ -77,6 +77,7 @@ func RecordDemo(file io.Reader, freq float64) Demo {
 			tick := p.CurrentFrame()
 			players := make([]Player, 0)
 			grenades := make([]Grenade, 0)
+			infernos := make([]Inferno, 0)
 
 			if tick%snapshotRate == 0 {
 				for _, pl := range p.GameState().Participants().Playing() {
@@ -91,10 +92,15 @@ func RecordDemo(file io.Reader, freq float64) Demo {
 					grenades = append(grenades, e)
 				}
 
+				for _, pl := range p.GameState().Infernos() {
+					infernos = append(infernos, ToInferno(*pl))
+				}
+
 				renderedTicks = append(renderedTicks, Tick{
 					Tick:              tick,
 					Players:           players,
 					Grenades:          grenades,
+					Infernos:          infernos,
 					TotalRoundsPlayed: p.GameState().TotalRoundsPlayed(),
 				})
 			}

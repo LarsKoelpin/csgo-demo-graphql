@@ -1,0 +1,18 @@
+{
+      demo(fps: 20) {
+			  header {
+          mapName
+        }
+
+        ticks {
+          tick
+          infernos {
+            hull {
+              x
+              y
+            }
+          }
+
+        }
+      }
+}

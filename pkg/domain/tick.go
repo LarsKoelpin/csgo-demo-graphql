@@ -6,6 +6,7 @@ type Tick struct {
 	Tick              int       `json:"tick"`
 	Players           []Player  `json:"players"`
 	Grenades          []Grenade `json:"grenades"`
+	Infernos          []Inferno `json:"infernos"`
 	Bomb              Bomb      `json:"bomb"`
 	TotalRoundsPlayed int       `json:"totalRoundsPlayed"`
 }
@@ -24,6 +25,9 @@ var TickType = graphql.NewObject(graphql.ObjectConfig{
 		},
 		"grenades": &graphql.Field{
 			Type: graphql.NewList(GrenadeProjectileType),
+		},
+		"infernos": &graphql.Field{
+			Type: graphql.NewList(InfernoType),
 		},
 		"totalRoundsPlayed": &graphql.Field{
 			Type: graphql.Int,
