@@ -4,12 +4,14 @@ import (
 	"github.com/graphql-go/graphql"
 )
 
+// BombPlanted represents the event, when the bomb was planted.
 type BombPlanted struct {
-	Name     string
-	Player   Player
+	Name     string`json:"name"`
+	Player   Player `json:"player"`
 	Bombsite int32 `json:"bombsite"`
 }
 
+// BombPlantedType represents the BombPlantedEvent as GraphQL Type.
 var BombPlantedType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "BombPlanted",
 	Fields: graphql.Fields{

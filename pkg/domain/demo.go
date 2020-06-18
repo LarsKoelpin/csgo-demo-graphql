@@ -7,12 +7,14 @@ import (
 	"github.com/graphql-go/graphql"
 )
 
+// Demo represents the json of a whole demo.
 type Demo struct {
-	Header Header
-	Ticks  []Tick
-	Events []GameEvent
+	Header Header `json:"header"`
+	Ticks  []Tick `json:"ticks"`
+	Events []GameEvent `json:"events"`
 }
 
+// CreateDemoType creats a GraphQL Schema representing the whole query.
 func CreateDemoType(repository *DemoRepository) *graphql.Object {
 	return graphql.NewObject(graphql.ObjectConfig{
 		Name: "demo",
@@ -71,6 +73,7 @@ func CreateDemoType(repository *DemoRepository) *graphql.Object {
 	})
 }
 
+// DemoRepository holds the state of the whole Operation. In this case a simple in memory database
 type DemoRepository struct {
 	CurrentDemo Demo
 }

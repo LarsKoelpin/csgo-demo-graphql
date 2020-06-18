@@ -5,6 +5,7 @@ import (
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/common"
 )
 
+// Equipment represents the Equipment of a player in the json format.
 type Equipment struct {
 	Type           int `json:"type"`
 	AmmoInMagazine int `json:"ammoInMagazine"`
@@ -12,6 +13,7 @@ type Equipment struct {
 	AmmoType       int `json:"ammoType"`
 }
 
+// EquipmentType represents the Equipment GraphQL Type.
 var EquipmentType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "equipment",
 	Fields: graphql.Fields{
@@ -27,6 +29,7 @@ var EquipmentType = graphql.NewObject(graphql.ObjectConfig{
 	},
 })
 
+// ToEntityEquipment maps an array of "core" Equipment to the JSON Model.
 func ToEntityEquipment(eq []*common.Equipment) []Equipment {
 	var equipmentForPlayer = make([]Equipment, 0, len(eq))
 
@@ -37,6 +40,7 @@ func ToEntityEquipment(eq []*common.Equipment) []Equipment {
 	return equipmentForPlayer
 }
 
+// FromEquipment maps a single "core" Equipment to the JSON Model.
 func FromEquipment(eq *common.Equipment) Equipment {
 	return Equipment{
 		Type:           int(eq.Type),

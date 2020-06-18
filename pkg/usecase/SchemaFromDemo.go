@@ -28,7 +28,7 @@ func SchemaFromDemo(demoFile io.Reader, repository domain.DemoRepository) graphq
 					log.Print("Invalid Frequency Value")
 					os.Exit(0)
 				}
-				newDemo := RecordDemo(demoFile, theFreq)
+				newDemo := domain.RecordDemo(demoFile, theFreq)
 				log.Print("The Demo was queried using freq" + fmt.Sprintf("%f", freq))
 				repository.CurrentDemo = newDemo
 				return repository.CurrentDemo, nil

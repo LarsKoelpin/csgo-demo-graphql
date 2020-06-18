@@ -5,18 +5,21 @@ import (
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
 )
 
+// FireStartedEvent represents the JSON of the fire started event.
 type FireStartedEvent struct {
 	Position Position `json:"position"`
 	Name     string   `json:"name"`
 	Tick     int      `json:"tick"`
 }
 
+// FireExpiredEvent represents the JSON of the fire expired event.
 type FireExpiredEvent struct {
 	Position Position `json:"position"`
 	Name     string   `json:"name"`
 	Tick     int      `json:"tick"`
 }
 
+// FireStarted creates a GameEvent for FIRE_STARTED of the real Event.
 func FireStarted(tick int, e events.FireGrenadeStart) GameEvent {
 	return GameEvent{
 		Name: "FIRE_STARTED",
@@ -32,6 +35,7 @@ func FireStarted(tick int, e events.FireGrenadeStart) GameEvent {
 	}
 }
 
+// FireExpired creates a GameEvent for FIRE_EXPIRED of the real Event.
 func FireExpired(tick int, e events.FireGrenadeExpired) GameEvent {
 	return GameEvent{
 		Name: "FIRE_EXPIRED",
@@ -47,6 +51,7 @@ func FireExpired(tick int, e events.FireGrenadeExpired) GameEvent {
 	}
 }
 
+// FireStartedType is the GraphQL type of the FireStartedEvent
 var FireStartedType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "FireStarted",
 	Fields: graphql.Fields{
@@ -79,6 +84,7 @@ var FireStartedType = graphql.NewObject(graphql.ObjectConfig{
 	},
 })
 
+// FireExpiredType is the GraphQL type of the FireStartedEvent
 var FireExpiredType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "FireExpired",
 	Fields: graphql.Fields{
