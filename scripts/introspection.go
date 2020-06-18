@@ -2,8 +2,9 @@ package main
 
 import (
 	"log"
+  "os"
 
-	"github.com/larskoelpin/csgo-demo-graphql/pkg/domain"
+  "github.com/larskoelpin/csgo-demo-graphql/pkg/domain"
 	"github.com/larskoelpin/csgo-demo-graphql/pkg/usecase"
 )
 
@@ -114,11 +115,11 @@ fragment TypeRef on __Type {
 
 var completeQuery = `
 {
-      demo(freq: 0.1) {
+      demo(fps: 0.1) {
 			  header {
           mapName
           tickRate
-          snapshotRate
+          fps
         }
         ticks {
           tick
@@ -136,7 +137,7 @@ var completeQuery = `
             hp
             armor
             flashDuration
-            isNpc
+            npc
             hasHelmet
             hasDefuseKit
             equipment {
@@ -144,9 +145,10 @@ var completeQuery = `
               ammoInMagazine
               ammoReserve
             }
-            isPlanting
-            isDefusing
-            isInBuyzone
+            firing
+            planting
+            defusing
+            inBuyzone
             money
             kills
             deaths
@@ -170,7 +172,8 @@ func main() {
 	demoRepository := domain.DemoRepository{}
 	log.Print("Reading User query ...")
 	log.Print("Creating a schema ...")
-	schema := usecase.SchemaFromDemo("test.dem", demoRepository)
+	file,_ := os.Open("test.dem");
+	schema := usecase.SchemaFromDemo(file, demoRepository)
 	introspection := usecase.CreateJson(schema, introspectionQuery)
 	usecase.CreateJsonFile("/home/lars/devel/src/github.com/larskoelpin/csgo-demo-graphql/docs/api-explorer/src/schema.json", introspection)
 	testdata := usecase.CreateJson(

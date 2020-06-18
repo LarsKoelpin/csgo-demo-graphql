@@ -17,12 +17,12 @@ func SchemaFromDemo(demoFile io.Reader, repository domain.DemoRepository) graphq
 			Name: "Demo",
 			Type: demoType,
 			Args: graphql.FieldConfigArgument{
-				"freq": &graphql.ArgumentConfig{
+				"fps": &graphql.ArgumentConfig{
 					Type: graphql.NewNonNull(graphql.Float),
 				},
 			},
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				freq := p.Args["freq"]
+				freq := p.Args["fps"]
 				theFreq, okFreq := freq.(float64)
 				if !okFreq {
 					log.Print("Invalid Frequency Value")

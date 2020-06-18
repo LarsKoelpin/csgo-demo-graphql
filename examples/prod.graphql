@@ -1,5 +1,5 @@
 {
-  demo(freq: 20) {
+  demo(fps: 20) {
     header {
       mapName
       tickRate
