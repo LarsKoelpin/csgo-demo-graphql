@@ -11,13 +11,13 @@ any data resulting in a bloated JSON.
 ## Build
 If you want to build the app, clone the repository and run
 ```bash
-go build cmd/main.go
+go run cmd/main.go --query ./examples/prod.graphql --demo examples/test.dem
 ```
 
 For building the webserver run 
 
 ```bash
-go build cmd/webserver.go
+go build cmd/webserver.go --query ./examples/prod.graphql --port 8080
 ```
 
 It builds a binary called **main** or **webserver**.
