@@ -107,9 +107,9 @@ func RecordDemo(file io.Reader, freq float64) domain.Demo {
 
 	return domain.Demo{
 		Header: domain.Header{
-			MapName:      header.MapName,
-			TickRate:     header.FrameRate(),
-			SnapshotRate: 1,
+			MapName:  header.MapName,
+			TickRate: header.FrameRate(),
+			Fps:      int(freq),
 		},
 		Ticks:  renderedTicks,
 		Events: allEvents,

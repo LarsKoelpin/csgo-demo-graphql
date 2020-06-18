@@ -58,7 +58,7 @@ var PlayerType = graphql.NewObject(graphql.ObjectConfig{
 		"isInBuyzone": &graphql.Field{
 			Type: graphql.Boolean,
 		},
-		"isFiring": &graphql.Field{
+		"firing": &graphql.Field{
 			Type: graphql.Boolean,
 		},
 		"money": &graphql.Field{
@@ -93,7 +93,7 @@ type Player struct {
 	Money         int         `json:"money,omitempty"`
 	Kills         int         `json:"kills,omitempty"`
 	Deaths        int         `json:"deaths,omitempty"`
-	IsFiring      bool        `json:"isFiring, omitempty"`
+	Firing        bool        `json:"isFiring, omitempty"`
 }
 
 func CreateParticipant(pl *common.Player, fireing bool) Player {
@@ -120,6 +120,6 @@ func CreateParticipant(pl *common.Player, fireing bool) Player {
 		Kills:        pl.Kills(),
 		Deaths:       pl.Deaths(),
 		IsInBuyzone:  pl.IsInBuyZone(),
-		IsFiring:     fireing,
+		Firing:       fireing,
 	}
 }
