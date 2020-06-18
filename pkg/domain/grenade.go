@@ -5,10 +5,10 @@ import (
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/common"
 )
 
-func NewProjectile(e common.GrenadeProjectile) Grenade {
+func NewProjectile(e common.GrenadeProjectile, firing map[int]bool) Grenade {
 	return Grenade{
-		Thrower:        CreateParticipant(e.Thrower),
-		Owner:          CreateParticipant(e.Owner),
+		Thrower:        CreateParticipant(e.Thrower, firing[e.Thrower.EntityID]),
+		Owner:          CreateParticipant(e.Owner, firing[e.Owner.EntityID]),
 		Trajectory:     FromVectors(e.Trajectory),
 		WeaponInstance: FromEquipment(e.WeaponInstance),
 		Position:       FromVector(e.Position()),

@@ -1,0 +1,11 @@
+
+{
+  demo(freq: 20) {
+    ticks {
+      players {
+        isFiring
+      }
+    }
+  }
+}
+

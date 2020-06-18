@@ -12,7 +12,6 @@
       "FIRE_EXPIRED",
       "SMOKE_STARTED",
       "SMOKE_EXPIRED",
-      "WEAPON_FIRED",
       "FLASH_EXPLOSION"
     ]) {
      ... on FlashExplosion {
@@ -82,6 +81,7 @@
     ticks {
       totalRoundsPlayed
       players {
+        firing
         name
         armor
         angleX

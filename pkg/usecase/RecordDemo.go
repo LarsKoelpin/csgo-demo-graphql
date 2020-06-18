@@ -15,23 +15,24 @@ func RecordDemo(file io.Reader, freq float64) domain.Demo {
 	header, _ := p.ParseHeader()
 
 	allEvents := make([]domain.GameEvent, 0)
-
+	firing := make(map[int]bool)
 	p.RegisterEventHandler(func(e events.BombPlanted) {
 		allEvents = append(allEvents, domain.GameEvent{
 			Name: "BOMB_PLANTED",
 			RealEvent: domain.BombPlanted{
 				Name:     "BOMB_PLANTED",
-				Player:   domain.CreateParticipant(e.Player),
+				Player:   domain.CreateParticipant(e.Player, firing[e.Player.EntityID]),
 				Bombsite: int32(e.Site),
 			},
 		})
 	})
 
 	p.RegisterEventHandler(func(e events.WeaponFire) {
+		firing[e.Shooter.EntityID] = true
 		allEvents = append(allEvents, domain.GameEvent{
 			Name: "WEAPON_FIRED",
 			RealEvent: domain.WeaponFired{
-				Shooter: domain.CreateParticipant(e.Shooter),
+				Shooter: domain.CreateParticipant(e.Shooter, firing[e.Shooter.EntityID]),
 				Weapon:  domain.FromEquipment(e.Weapon),
 			},
 		})
@@ -79,13 +80,14 @@ func RecordDemo(file io.Reader, freq float64) domain.Demo {
 
 			if tick%snapshotRate == 0 {
 				for _, pl := range p.GameState().Participants().Playing() {
-					e := domain.CreateParticipant(pl)
+					e := domain.CreateParticipant(pl, firing[pl.EntityID])
 
 					players = append(players, e)
+					firing[pl.EntityID] = false
 				}
 
 				for _, grenade := range p.GameState().GrenadeProjectiles() {
-					e := domain.NewProjectile(*grenade)
+					e := domain.NewProjectile(*grenade, firing)
 					grenades = append(grenades, e)
 				}
 
@@ -96,6 +98,7 @@ func RecordDemo(file io.Reader, freq float64) domain.Demo {
 					TotalRoundsPlayed: p.GameState().TotalRoundsPlayed(),
 				})
 			}
+
 		})
 
 	p.ParseToEnd()
