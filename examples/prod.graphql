@@ -1,5 +1,5 @@
 {
-  demo(freq: 10) {
+  demo(freq: 20) {
     header {
       mapName
       tickRate
