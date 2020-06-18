@@ -37,7 +37,7 @@ var PlayerType = graphql.NewObject(graphql.ObjectConfig{
 		"flashDuration": &graphql.Field{
 			Type: graphql.Float,
 		},
-		"isNpc": &graphql.Field{
+		"npc": &graphql.Field{
 			Type: graphql.Boolean,
 		},
 		"hasHelmet": &graphql.Field{
@@ -49,13 +49,13 @@ var PlayerType = graphql.NewObject(graphql.ObjectConfig{
 		"equipment": &graphql.Field{
 			Type: graphql.NewList(EquipmentType),
 		},
-		"isPlanting": &graphql.Field{
+		"planting": &graphql.Field{
 			Type: graphql.Boolean,
 		},
-		"isDefusing": &graphql.Field{
+		"defusing": &graphql.Field{
 			Type: graphql.Boolean,
 		},
-		"isInBuyzone": &graphql.Field{
+		"inBuyzone": &graphql.Field{
 			Type: graphql.Boolean,
 		},
 		"firing": &graphql.Field{
@@ -83,13 +83,13 @@ type Player struct {
 	Hp            int         `json:"hp,omitempty"`
 	Armor         int         `json:"armor,omitempty"`
 	FlashDuration float32     `json:"flashDuration,omitempty"`
-	IsNpc         bool        `json:"isNpc,omitempty"`
+	Npc           bool        `json:"npc,omitempty"`
 	HasHelmet     bool        `json:"hasHelmet,omitempty"`
 	HasDefuseKit  bool        `json:"hasDefuseKit,omitempty"`
 	Equipment     []Equipment `json:"equipment,omitempty"`
-	IsPlanting    bool        `json:"isPlanting,omitempty"`
-	IsDefusing    bool        `json:"isDefusing,omitempty"`
-	IsInBuyzone   bool        `json:"isInBuyzone,omitempty"`
+	Planting      bool        `json:"planting,omitempty"`
+	Defusing      bool        `json:"defusing,omitempty"`
+	InBuyzone     bool        `json:"inBuyzone,omitempty"`
 	Money         int         `json:"money,omitempty"`
 	Kills         int         `json:"kills,omitempty"`
 	Deaths        int         `json:"deaths,omitempty"`
@@ -114,12 +114,12 @@ func CreateParticipant(pl *common.Player, fireing bool) Player {
 		HasDefuseKit: pl.HasDefuseKit(),
 		Equipment:    ToEntityEquipment(pl.Weapons()),
 		Team:         int(pl.Team),
-		IsDefusing:   pl.IsDefusing,
-		IsPlanting:   pl.IsPlanting,
+		Defusing:     pl.IsDefusing,
+		Planting:     pl.IsPlanting,
 		Money:        pl.Money(),
 		Kills:        pl.Kills(),
 		Deaths:       pl.Deaths(),
-		IsInBuyzone:  pl.IsInBuyZone(),
+		InBuyzone:    pl.IsInBuyZone(),
 		Firing:       fireing,
 	}
 }
