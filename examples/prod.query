@@ -8,6 +8,18 @@
     ticks {
       tick
       totalRoundsPlayed
+      smokes {
+        position {
+          x
+          y
+        }
+      }
+      infernos {
+        hull {
+          x
+          y
+        }
+      }
       players {
         entityId
         firing
@@ -47,9 +59,18 @@
         "ROUND_STARTED"
         "ROUND_ENDED"
         "FLASH_EXPLOSION"
+        "HE_EXPLOSION"
       ]
     ) {
-      ... on FlashExplosion {
+     ... on HEExploded {
+         name
+         tick
+         position {
+            x
+            y
+         }
+      }
+      ... on FlashExploded {
         name
         tick
         position {

@@ -27,7 +27,7 @@ func NewFlashExplosion(tick int, e events.FlashExplode) GameEvent {
 }
 
 var FlashExplosionType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "FlashExplosion",
+	Name: "FlashExploded",
 	Fields: graphql.Fields{
 		"name": &graphql.Field{
 			Name: "name",
@@ -40,14 +40,14 @@ var FlashExplosionType = graphql.NewObject(graphql.ObjectConfig{
 			Type: PositionType,
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				x := p.Source.(GameEvent)
-				return x.RealEvent.(SmokeStartedEvent).Position, nil
+				return x.RealEvent.(FlashExplosionEvent).Position, nil
 			},
 		},
 		"tick": &graphql.Field{
 			Type: graphql.Int,
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				x := p.Source.(GameEvent)
-				return x.RealEvent.(SmokeStartedEvent).Tick, nil
+				return x.RealEvent.(FlashExplosionEvent).Tick, nil
 			},
 		},
 	},
