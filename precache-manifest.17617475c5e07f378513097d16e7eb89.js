@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "9b37dd5c027bd7eaab866c765956243e",
+    "revision": "ce0d1e976060522b025a18ad086d0570",
     "url": "/csgo-demo-graphql/index.html"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/csgo-demo-graphql/static/js/2.abaf1c3a.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "d986ae0645834f5dc0d9",
-    "url": "/csgo-demo-graphql/static/js/main.7d0b7c75.chunk.js"
+    "revision": "0b60dfbe2e5a6a507185",
+    "url": "/csgo-demo-graphql/static/js/main.8991a671.chunk.js"
   },
   {
     "revision": "5215e98d43ae056fe9ff",
