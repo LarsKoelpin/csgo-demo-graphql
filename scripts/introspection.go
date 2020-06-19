@@ -124,6 +124,13 @@ var completeQuery = `
         ticks {
           tick
           totalRoundsPlayed
+          smokes {
+            id
+            position {
+              x
+              y
+            }
+          }
           players {
             name
             entityId
