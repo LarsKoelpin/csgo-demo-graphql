@@ -80,6 +80,10 @@ func RecordDemo(file io.Reader, freq float64) Demo {
 		allEvents = append(allEvents, NewFlashExplosion(p.GameState().IngameTick(), e))
 	})
 
+	p.RegisterEventHandler(func(e events.HeExplode) {
+		allEvents = append(allEvents, NewHeExplosion(p.GameState().IngameTick(), e))
+	})
+
 	snapshotRate := int(math.Round(header.FrameRate() / freq))
 	renderedTicks := make([]Tick, 0)
 	p.RegisterEventHandler(

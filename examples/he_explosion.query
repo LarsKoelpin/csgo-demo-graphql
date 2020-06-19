@@ -1,0 +1,14 @@
+{
+  demo(fps: 20) {
+    events(type: ["HE_EXPLOSION"]) {
+      ... on HEExploded {
+        name
+        tick
+        position {
+           x
+           y
+        }
+      }
+    }
+  }
+}

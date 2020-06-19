@@ -5,55 +5,58 @@ import (
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
 )
 
-type FlashExplosionEvent struct {
+// HEExplosionEvent represents an event of a explodion HE-Grenade.
+type HEExplosionEvent struct {
 	Position Position `json:"position"`
 	Name     string   `json:"name"`
 	Tick     int      `json:"tick"`
 }
 
-func NewFlashExplosion(tick int, e events.FlashExplode) GameEvent {
+// NewHeExplision creates a new HEExplosion Event from the core event.
+func NewHeExplosion(tick int, e events.HeExplode) GameEvent {
 	return GameEvent{
-		Name: "FLASH_EXPLOSION",
-		RealEvent: FlashExplosionEvent{
+		Name: "HE_EXPLOSION",
+		RealEvent: HEExplosionEvent{
 			Position: Position{
 				X: e.Position.X,
 				Y: e.Position.Y,
 				Z: e.Position.Z,
 			},
-			Name: "FLASH_EXPLOSION",
+			Name: "HE_EXPLOSION",
 			Tick: tick,
 		},
 	}
 }
 
-var FlashExplosionType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "FlashExplosion",
+// HEExplosionType represents the GraphQL Type of a HEGrenade.
+var HEExplosionType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "HEExploded",
 	Fields: graphql.Fields{
 		"name": &graphql.Field{
 			Name: "name",
 			Type: graphql.String,
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				return "FLASH_EXPLOSION", nil
+				return "HE_EXPLOSION", nil
 			},
 		},
 		"position": &graphql.Field{
 			Type: PositionType,
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				x := p.Source.(GameEvent)
-				return x.RealEvent.(SmokeStartedEvent).Position, nil
+				return x.RealEvent.(HEExplosionEvent).Position, nil
 			},
 		},
 		"tick": &graphql.Field{
 			Type: graphql.Int,
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				x := p.Source.(GameEvent)
-				return x.RealEvent.(SmokeStartedEvent).Tick, nil
+				return x.RealEvent.(HEExplosionEvent).Tick, nil
 			},
 		},
 	},
 	IsTypeOf: func(p graphql.IsTypeOfParams) bool {
 		eventName := p.Value.(GameEvent).Name
 
-		return eventName == "FLASH_EXPLOSION"
+		return eventName == "HE_EXPLOSION"
 	},
 })

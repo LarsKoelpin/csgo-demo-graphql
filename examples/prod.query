@@ -46,10 +46,6 @@
         "MATCH_STARTED"
         "ROUND_STARTED"
         "ROUND_ENDED"
-        "FIRE_STARTED"
-        "FIRE_EXPIRED"
-        "SMOKE_STARTED"
-        "SMOKE_EXPIRED"
         "FLASH_EXPLOSION"
       ]
     ) {
@@ -73,42 +69,6 @@
 
       ... on RoundStarted {
         name
-        tick
-      }
-
-      ... on SmokeStarted {
-        name
-        position {
-          x
-          y
-        }
-        tick
-      }
-
-      ... on SmokeExpired {
-        name
-        position {
-          x
-          y
-        }
-        tick
-      }
-
-      ... on FireStarted {
-        name
-        position {
-          x
-          y
-        }
-        tick
-      }
-
-      ... on FireExpired {
-        name
-        position {
-          x
-          y
-        }
         tick
       }
     }
