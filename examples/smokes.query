@@ -1,0 +1,14 @@
+{
+      demo(fps: 20) {
+        ticks {
+          tick
+          smokes {
+            id
+            position  {
+              x
+              y
+            }
+          }
+      }
+}
+}

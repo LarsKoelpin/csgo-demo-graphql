@@ -38,12 +38,21 @@ func RecordDemo(file io.Reader, freq float64) Demo {
 		})
 	})
 
+	smokes := make([]Smoke, 0)
+
 	p.RegisterEventHandler(func(e events.SmokeStart) {
 		allEvents = append(allEvents, SmokeStarted(p.GameState().IngameTick(), e))
+		smokes = append(smokes, Smoke{
+			Id: e.GrenadeEntityID,
+			Position: Position{
+				X: e.Position.X,
+				Y: e.Position.Y,
+			}})
 	})
 
 	p.RegisterEventHandler(func(e events.SmokeExpired) {
 		allEvents = append(allEvents, SmokeExpired(p.GameState().IngameTick(), e))
+		smokes = Remove(smokes, e.GrenadeEntityID)
 	})
 
 	p.RegisterEventHandler(func(e events.FireGrenadeStart) {
@@ -60,6 +69,7 @@ func RecordDemo(file io.Reader, freq float64) Demo {
 
 	p.RegisterEventHandler(func(e events.RoundEnd) {
 		allEvents = append(allEvents, RoundEnded(p.GameState().IngameTick(), e))
+		smokes = make([]Smoke, 0)
 	})
 
 	p.RegisterEventHandler(func(e events.MatchStart) {
@@ -101,6 +111,7 @@ func RecordDemo(file io.Reader, freq float64) Demo {
 					Players:           players,
 					Grenades:          grenades,
 					Infernos:          infernos,
+					Smokes:            smokes,
 					TotalRoundsPlayed: p.GameState().TotalRoundsPlayed(),
 				})
 			}
