@@ -1,0 +1,57 @@
+<!doctype html>
+<!--
+Copyright 2018 The Go Authors. All rights reserved.
+Use of this source code is governed by a BSD-style
+license that can be found in the LICENSE file.
+-->
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Go wasm</title>
+</head>
+
+<body>
+<!--
+Add the following polyfill for Microsoft Edge 17/18 support:
+<script src="https://cdn.jsdelivr.net/npm/text-encoding@0.7.0/lib/encoding.min.js"></script>
+(see https://caniuse.com/#feat=textencoder)
+-->
+<script src="wasm_exec.js"></script>
+<script>
+  if (!WebAssembly.instantiateStreaming) { // polyfill
+    WebAssembly.instantiateStreaming = async (resp, importObject) => {
+      const source = await (await resp).arrayBuffer();
+      return await WebAssembly.instantiate(source, importObject);
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const go = new Go();
+    WebAssembly.instantiateStreaming(fetch("test.wasm"), go.importObject).then((result) => {
+      go.run(result.instance);
+    });
+  }, false);
+
+  window.parseFile = () => {
+    console.log('reading demo');
+    console.log("RUN STARTING ..")
+    const reader = new FileReader();
+    reader.onload = function () {
+      const data = reader.result;
+      const bytes = new Uint8Array(data);
+      console.log('parsing');
+      parse(bytes, (stats) => console.log(stats));
+    };
+    console.log("READING XD")
+    reader.readAsArrayBuffer(document.getElementById('demofile').files[0])
+  }
+
+</script>
+
+<input type="file" id="demofile" name="file" enctype="multipart/form-data"/>
+
+<button onClick="parseFile();" id="runButton">Run</button>
+</body>
+
+</html>
