@@ -65,6 +65,7 @@ func RecordDemo(file io.Reader, freq float64) Demo {
 
 	p.RegisterEventHandler(func(e events.RoundStart) {
 		allEvents = append(allEvents, RoundStarted(p.GameState().IngameTick(), e))
+    smokes = make([]Smoke, 0)
 	})
 
 	p.RegisterEventHandler(func(e events.RoundEnd) {
@@ -74,6 +75,7 @@ func RecordDemo(file io.Reader, freq float64) Demo {
 
 	p.RegisterEventHandler(func(e events.MatchStart) {
 		allEvents = append(allEvents, NewMatchStartedEvent(p.GameState().IngameTick(), e))
+    smokes = make([]Smoke, 0)
 	})
 
 	p.RegisterEventHandler(func(e events.FlashExplode) {
@@ -88,7 +90,7 @@ func RecordDemo(file io.Reader, freq float64) Demo {
 	renderedTicks := make([]Tick, 0)
 	p.RegisterEventHandler(
 		func(e events.FrameDone) {
-			tick := p.CurrentFrame()
+			tick := p.GameState().IngameTick()
 			players := make([]Player, 0)
 			grenades := make([]Grenade, 0)
 			infernos := make([]Inferno, 0)
