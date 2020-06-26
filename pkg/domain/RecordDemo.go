@@ -13,7 +13,6 @@ import (
 func RecordDemo(file io.Reader, freq float64) Demo {
 	p := dem.NewParser(file)
 	header, _ := p.ParseHeader()
-
 	allEvents := make([]GameEvent, 0)
 	firing := make(map[int]bool)
 	p.RegisterEventHandler(func(e events.BombPlanted) {
@@ -65,7 +64,7 @@ func RecordDemo(file io.Reader, freq float64) Demo {
 
 	p.RegisterEventHandler(func(e events.RoundStart) {
 		allEvents = append(allEvents, RoundStarted(p.GameState().IngameTick(), e))
-    smokes = make([]Smoke, 0)
+		smokes = make([]Smoke, 0)
 	})
 
 	p.RegisterEventHandler(func(e events.RoundEnd) {
@@ -75,7 +74,7 @@ func RecordDemo(file io.Reader, freq float64) Demo {
 
 	p.RegisterEventHandler(func(e events.MatchStart) {
 		allEvents = append(allEvents, NewMatchStartedEvent(p.GameState().IngameTick(), e))
-    smokes = make([]Smoke, 0)
+		smokes = make([]Smoke, 0)
 	})
 
 	p.RegisterEventHandler(func(e events.FlashExplode) {
@@ -86,7 +85,7 @@ func RecordDemo(file io.Reader, freq float64) Demo {
 		allEvents = append(allEvents, NewHeExplosion(p.GameState().IngameTick(), e))
 	})
 
-	snapshotRate := int(math.Round(header.FrameRate() / freq))
+	snapshotRate := int(math.Round(p.TickRate() / freq))
 	renderedTicks := make([]Tick, 0)
 	p.RegisterEventHandler(
 		func(e events.FrameDone) {
@@ -131,7 +130,7 @@ func RecordDemo(file io.Reader, freq float64) Demo {
 	return Demo{
 		Header: Header{
 			MapName:  header.MapName,
-			TickRate: header.FrameRate(),
+			TickRate: p.TickRate(),
 			Fps:      int(freq),
 		},
 		Ticks:  renderedTicks,
