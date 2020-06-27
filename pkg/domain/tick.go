@@ -16,6 +16,7 @@ type RenderedTick map[string]interface{}
 func RenderTick(template TickTemplate, t Tick) RenderedTick {
 	renderedTick := map[string]interface{}{}
 
+	smokesTpl, hasSmokes := template["smokes"]
 	_, players := template["players"]
 
 	if template["tick"] == true {
@@ -29,8 +30,9 @@ func RenderTick(template TickTemplate, t Tick) RenderedTick {
 		renderedTick["grenades"] = t.Grenades
 	}
 
-	if template["smokes"] == true {
-		renderedTick["smokes"] = t.Smokes
+	if hasSmokes {
+		smokesTemplate := smokesTpl.(map[string]interface{})
+		renderedTick["smokes"] = RenderSmokes(smokesTemplate, t.Smokes)
 	}
 
 	if template["bomb"] == true {

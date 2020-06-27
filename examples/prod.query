@@ -53,15 +53,7 @@
         }
       }
     }
-    events(
-      type: [
-        "MATCH_STARTED"
-        "ROUND_STARTED"
-        "ROUND_ENDED"
-        "FLASH_EXPLOSION"
-        "HE_EXPLOSION"
-      ]
-    ) {
+    events {
      ... on HEExploded {
          name
          tick

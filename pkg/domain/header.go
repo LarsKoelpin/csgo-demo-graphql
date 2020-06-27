@@ -1,24 +1,30 @@
 package domain
 
-import "github.com/graphql-go/graphql"
-
 type Header struct {
-	MapName  string  `json:"map"`
+	MapName  string  `json:"mapName"`
 	TickRate float64 `json:"tickRate"` // How many ticks per second
 	Fps      int     `json:"fps"`
 }
 
-var HeaderType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "Header",
-	Fields: graphql.Fields{
-		"mapName": &graphql.Field{
-			Type: graphql.String,
-		},
-		"tickRate": &graphql.Field{
-			Type: graphql.Int,
-		},
-		"fps": &graphql.Field{
-			Type: graphql.Int,
-		},
-	},
-})
+// RenderHeader renders the header to the user selection
+func RenderHeader(template map[string]interface{}, h Header) map[string]interface{} {
+	result := map[string]interface{}{}
+
+	_, hasMapName := template["mapName"]
+	_, hasTickrate := template["tickrate"]
+	_, hasFps := template["fps"]
+
+	if hasMapName {
+		result["mapName"] = h.MapName
+	}
+
+	if hasTickrate {
+		result["tickrate"] = h.TickRate
+	}
+
+	if hasFps {
+		result["fps"] = h.Fps
+	}
+
+	return result
+}

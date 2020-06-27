@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	json2 "encoding/json"
 	"flag"
 	"fmt"
 	"io"
@@ -53,11 +54,9 @@ func HTTPHandler(w http.ResponseWriter, r *http.Request) {
 
 	byteReader := bytes.NewReader(fileAsBytes)
 
-	demoRepository := domain.DemoRepository{}
 	log.Print("Creating a schema ...")
-	schema := usecase.SchemaFromDemo(byteReader, demoRepository)
-	json := usecase.CreateJson(schema, userQuery)
-
+	demo := domain.RecordDemo(byteReader, 20, domain.DefaultDemoTemplate)
+	json, _ := json2.Marshal(demo)
 	w.Write([]byte(json))
 }
 

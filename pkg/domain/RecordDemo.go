@@ -13,13 +13,19 @@ import (
 func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) RenderedDemo {
 	p := dem.NewParser(file)
 	renderedDemo := map[string]interface{}{}
-	p.ParseHeader()
-	allEvents := make([]map[string]interface{}, 0)
-	firing := make(map[int]bool)
-
-	smokes := make([]Smoke, 0)
 
 	eventsTemplate, hasEvents := demoTemplate["events"]
+	headerTemplate, hasHeaderTemplate := demoTemplate["header"]
+
+	h, _ := p.ParseHeader()
+	header := Header{
+		MapName:  h.MapName,
+		TickRate: p.TickRate(),
+		Fps:      int(freq),
+	}
+	allEvents := make([]map[string]interface{}, 0)
+	smokes := make([]Smoke, 0)
+	firing := make(map[int]bool)
 
 	if hasEvents {
 		eventTypes := eventsTemplate.(map[string]interface{})
@@ -60,12 +66,14 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 				smokeEvent := SmokeStarted(p.GameState().IngameTick(), e)
 				renderedSmokeEvent := RenderSmokeStarted(x, smokeEvent)
 				allEvents = append(allEvents, renderedSmokeEvent)
-				smokes = append(smokes, Smoke{
+
+				newSmoke := Smoke{
 					Id: e.GrenadeEntityID,
 					Position: Position{
 						X: e.Position.X,
 						Y: e.Position.Y,
-					}})
+					}}
+				smokes = append(smokes, newSmoke)
 			})
 		}
 
@@ -172,7 +180,7 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 				if tick%snapshotRate == 0 {
 					templateOfDemo, ok := ticksTemplate.(map[string]interface{})
 					if !ok {
-						return
+						log.Panic("NOPE")
 					}
 					for _, pl := range p.GameState().Participants().Playing() {
 						e := CreateParticipant(pl, firing[pl.EntityID])
@@ -199,13 +207,17 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 					})
 					renderedTicks = append(renderedTicks, renderedTick)
 				}
-				renderedDemo["ticks"] = renderedTicks
 			}
 		})
 
 	p.ParseToEnd()
 
 	renderedDemo["events"] = allEvents
+	renderedDemo["ticks"] = renderedTicks
+	if hasHeaderTemplate {
+		casted, _ := headerTemplate.(map[string]interface{})
+		renderedDemo["header"] = RenderHeader(casted, header)
+	}
 
 	log.Print("Recording finished")
 

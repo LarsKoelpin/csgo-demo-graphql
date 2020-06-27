@@ -7,26 +7,9 @@ type Demo struct {
 	Events []GameEvent `json:"events"`
 }
 
+// DemoTemplate is the main data structure. It get costructed in RecordDemo.go.
 type DemoTemplate map[string]interface{}
 type RenderedDemo map[string]interface{}
-
-func RenderDemo(demoTemplate DemoTemplate, d Demo) RenderedDemo {
-	renderedDemo := map[string]interface{}{}
-	ticksTemplate, hasTicks := demoTemplate["ticks"]
-	if hasTicks {
-		ticksTemplate, _ := ticksTemplate.(map[string]interface{})
-		renderedDemo["ticks"] = renderTicks(ticksTemplate, d.Ticks)
-	}
-	return renderedDemo
-}
-
-func renderTicks(template TickTemplate, p []Tick) []RenderedTick {
-	result := make([]RenderedTick, 0)
-	for _, x := range p {
-		result = append(result, RenderTick(template, x))
-	}
-	return result
-}
 
 // DemoRepository holds the state of the whole Operation. In this case a simple in memory database
 type DemoRepository struct {

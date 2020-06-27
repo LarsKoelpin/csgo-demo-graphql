@@ -13,6 +13,7 @@ var DefaultPlayerTemplate = map[string]interface{}{
 	"angleX":        true,
 	"angleY":        true,
 	"hp":            true,
+	"team":          true,
 	"armor":         true,
 	"flashDuration": true,
 	"npc":           true,
@@ -33,11 +34,24 @@ var DefaultPlayerTemplate = map[string]interface{}{
 }
 
 var DefaultTickTemplate = map[string]interface{}{
-	"tick":    true,
-	"players": DefaultPlayerTemplate,
+	"tick":              true,
+	"players":           DefaultPlayerTemplate,
+	"totalRoundsPlayed": true,
+	"smokes": map[string]interface{}{
+		"id": true,
+		"position": map[string]interface{}{
+			"x": true,
+			"y": true,
+		},
+	},
 }
 
 var DefaultDemoTemplate = map[string]interface{}{
+	"header": map[string]interface{}{
+		"mapName":  true,
+		"tickrate": true,
+		"fps":      true,
+	},
 	"ticks":  DefaultTickTemplate,
 	"events": DefaultEventsTemplate,
 }

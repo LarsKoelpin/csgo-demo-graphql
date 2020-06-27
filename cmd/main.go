@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"time"
@@ -21,7 +22,7 @@ func main() {
 	}
 
 	inPath := fl.String("demo", "", "Path to the .dem file")
-	freqPtr := fl.String("query", "", "The query file")
+	queryPtr := fl.String("query", "", "The query file")
 	outPath := fl.String("outPath", "", "The resulting JSON")
 
 	err := fl.Parse(os.Args[1:])
@@ -30,8 +31,8 @@ func main() {
 		return
 	}
 
-	if *freqPtr == "" {
-		log.Fatal("No query file specified. try using --query=/path/to/ile  :(", freqPtr)
+	if *queryPtr == "" {
+		log.Fatal("No query file specified. try using --query=/path/to/ile  :(", queryPtr)
 	}
 
 	if *outPath == "" {
@@ -47,10 +48,20 @@ func main() {
 	if err != nil {
 		log.Fatal("DemoFile does not exist")
 	}
+
+	queryFile, err := os.Open(*queryPtr)
+	if err != nil {
+		log.Fatal("DemoFile does not exist")
+	}
+
+	prodQuery := domain.DefaultDemoTemplate
 	//schema := usecase.SchemaFromDemo(file, demoRepository)
 	//json := usecase.CreateJson(schema, userQuery)
+	query, _ := ioutil.ReadAll(queryFile)
+
+	usecase.ParseQuery(string(query))
 	start := time.Now()
-	demo := domain.RecordDemo(file, 20, domain.DefaultDemoTemplate)
+	demo := domain.RecordDemo(file, 20, prodQuery)
 	asJson, _ := json.Marshal(demo)
 	usecase.CreateJsonFile("out.json", asJson)
 	elapsed := time.Since(start)
