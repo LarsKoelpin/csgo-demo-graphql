@@ -1,27 +1,8 @@
 package domain
 
-import (
-	"github.com/graphql-go/graphql"
-)
+type RenderedGameEvent = map[string]interface{}
 
 type GameEvent struct {
 	Name      string `json:"name"`
 	RealEvent interface{}
 }
-
-var GameEventType = graphql.NewUnion(graphql.UnionConfig{
-	Name: "AnyGameEvent",
-	Types: []*graphql.Object{
-		BombPlantedType,
-		WeaponFiredType,
-		SmokeStartedType,
-		SmokeExpiredType,
-		FireStartedType,
-		FireExpiredType,
-		RoundStartedType,
-		RoundEndedType,
-		MatchStartedEventTpe,
-		FlashExplosionType,
-		HEExplosionType,
-	},
-})

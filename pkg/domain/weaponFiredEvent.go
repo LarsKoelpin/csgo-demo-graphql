@@ -1,8 +1,6 @@
 package domain
 
-import (
-	"github.com/graphql-go/graphql"
-)
+import "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
 
 type WeaponFired struct {
 	Name    string    `json:"name"`
@@ -11,47 +9,33 @@ type WeaponFired struct {
 	Tick    int       `json:"tick"`
 }
 
-var WeaponFiredType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "WeaponFired",
-	Fields: graphql.Fields{
-		"name": &graphql.Field{
-			Name: "name",
-			Type: graphql.String,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				return "WEAPON_FIRED", nil
-			},
-		},
-		"shooter": &graphql.Field{
-			Name: "shooter",
-			Type: PlayerType,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				x := p.Source.(GameEvent)
-				event := x.RealEvent.(WeaponFired)
-				return event.Shooter, nil
-			},
-		},
-		"weapon": &graphql.Field{
-			Name: "weapon",
-			Type: EquipmentType,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				x := p.Source.(GameEvent)
-				event := x.RealEvent.(WeaponFired)
-				return event.Weapon, nil
-			},
-		},
-		"tick": &graphql.Field{
-			Name: "tick",
-			Type: graphql.Int,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				x := p.Source.(GameEvent)
-				event := x.RealEvent.(WeaponFired)
-				return event.Tick, nil
-			},
-		},
-	},
-	IsTypeOf: func(p graphql.IsTypeOfParams) bool {
-		eventName := p.Value.(GameEvent).Name
+// NewWeaponFired creates an Event
+func NewWeaponFired(tick int, e events.WeaponFire) WeaponFired {
+	return WeaponFired{
+		Name:   "WEAPON_FIRED",
+		Tick:   tick,
+		Weapon: FromEquipment(e.Weapon),
+	}
+}
 
-		return eventName == "WEAPON_FIRED"
-	},
-})
+func RenderWeaponFired(template map[string]interface{}, e WeaponFired) map[string]interface{} {
+	result := map[string]interface{}{}
+	_, hasName := template["name"]
+	_, hasTick := template["tick"]
+	weaponTpl, hasWeapon := template["weapon"]
+
+	if hasName {
+		result["name"] = e.Name
+	}
+
+	if hasTick {
+		result["tick"] = e.Tick
+	}
+
+	if hasWeapon {
+		weaponTemplate := weaponTpl.(map[string]interface{})
+		result["weapon"] = RenderEquipment(weaponTemplate, e.Weapon)
+	}
+
+	return result
+}

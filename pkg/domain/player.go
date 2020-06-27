@@ -1,77 +1,129 @@
 package domain
 
 import (
+	"log"
 	"math"
 
-	"github.com/graphql-go/graphql"
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/common"
 )
 
-var PlayerType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "Player",
-	Fields: graphql.Fields{
-		"name": &graphql.Field{
-			Type: graphql.String,
-		},
-		"entityId": &graphql.Field{
-			Type: graphql.Int,
-		},
-		"team": &graphql.Field{
-			Type: graphql.Int,
-		},
-		"position": &graphql.Field{
-			Type: PositionType,
-		},
-		"angleX": &graphql.Field{
-			Type: graphql.Float,
-		},
-		"angleY": &graphql.Field{
-			Type: graphql.Float,
-		},
-		"hp": &graphql.Field{
-			Type: graphql.Int,
-		},
-		"armor": &graphql.Field{
-			Type: graphql.Int,
-		},
-		"flashDuration": &graphql.Field{
-			Type: graphql.Float,
-		},
-		"npc": &graphql.Field{
-			Type: graphql.Boolean,
-		},
-		"hasHelmet": &graphql.Field{
-			Type: graphql.Boolean,
-		},
-		"hasDefuseKit": &graphql.Field{
-			Type: graphql.Boolean,
-		},
-		"equipment": &graphql.Field{
-			Type: graphql.NewList(EquipmentType),
-		},
-		"planting": &graphql.Field{
-			Type: graphql.Boolean,
-		},
-		"defusing": &graphql.Field{
-			Type: graphql.Boolean,
-		},
-		"inBuyzone": &graphql.Field{
-			Type: graphql.Boolean,
-		},
-		"firing": &graphql.Field{
-			Type: graphql.Boolean,
-		},
-		"money": &graphql.Field{
-			Type: graphql.Int,
-		},
-		"kills": &graphql.Field{
-			Type: graphql.Int,
-		},
-		"deaths": &graphql.Field{
-			Type: graphql.Int,
-		},
-	},
-})
+type PlayerTemplate map[string]interface{}
+type RenderedPlayer map[string]interface{}
+
+func RenderPlayer(template PlayerTemplate, player Player) RenderedPlayer {
+	renderedPlayer := map[string]interface{}{}
+
+	_, hasName := template["name"]
+	_, hasEntityId := template["entityId"]
+	_, hasTeam := template["team"]
+	posTemplate, hasPosition := template["position"]
+	_, hasAngleX := template["angleX"]
+	_, hasAngleY := template["angleY"]
+	_, hasHp := template["hp"]
+	_, hasArmor := template["armor"]
+	_, hasFlashDuration := template["flashDuration"]
+	_, hasNpc := template["npc"]
+	_, hasHelmet := template["hasHelmet"]
+	_, hasDefuse := template["hasDefuseKit"]
+	equipmentTpl, equipment := template["equipment"]
+	_, hasPlanting := template["planting"]
+	_, hasDefusing := template["defusing"]
+	_, hasBuyzone := template["inBuyzone"]
+	_, hasMoney := template["money"]
+	_, hasKills := template["kills"]
+	_, hasDeaths := template["deaths"]
+	_, hasFiring := template["firing"]
+
+	if hasName {
+		renderedPlayer["name"] = player.Name
+	}
+
+	if hasEntityId {
+		renderedPlayer["entityId"] = player.EntityID
+	}
+	if hasTeam {
+		renderedPlayer["team"] = player.Team
+	}
+
+	if hasPosition {
+		positionTemplate, ok := posTemplate.(map[string]interface{})
+		if ok {
+			renderedPlayer["position"] = RenderPosition(positionTemplate, player.Position)
+		} else {
+			log.Panic("WTF")
+		}
+	}
+
+	if hasAngleX {
+		renderedPlayer["angleX"] = player.AngleX
+	}
+
+	if hasAngleY {
+		renderedPlayer["angleY"] = player.AngleY
+	}
+
+	if hasHp {
+		renderedPlayer["hp"] = player.Hp
+	}
+
+	if hasArmor {
+		renderedPlayer["armor"] = player.HasHelmet
+	}
+
+	if hasFlashDuration {
+		renderedPlayer["flashDuration"] = player.FlashDuration
+	}
+
+	if hasNpc {
+		renderedPlayer["npc"] = player.Npc
+	}
+
+	if hasHelmet {
+		renderedPlayer["hasHelmet"] = player.HasHelmet
+	}
+
+	if hasDefuse {
+		renderedPlayer["hasDefuseKit"] = player.HasDefuseKit
+	}
+
+	if hasPlanting {
+		renderedPlayer["planting"] = player.Planting
+	}
+
+	if hasDefusing {
+		renderedPlayer["defusing"] = player.Defusing
+	}
+
+	if hasBuyzone {
+		renderedPlayer["inBuyzone"] = player.InBuyzone
+	}
+
+	if hasMoney {
+		renderedPlayer["money"] = player.Money
+	}
+
+	if hasKills {
+		renderedPlayer["kills"] = player.Kills
+	}
+
+	if hasDeaths {
+		renderedPlayer["deaths"] = player.Deaths
+	}
+
+	if hasFiring {
+		renderedPlayer["firing"] = player.Firing
+	}
+
+	if equipment {
+		castedEquipmentTpl := equipmentTpl.(map[string]interface{})
+		equipmentList := make([]map[string]interface{}, len(player.Equipment))
+		for _, singleEq := range player.Equipment {
+			equipmentList = append(equipmentList, RenderEquipment(castedEquipmentTpl, singleEq))
+		}
+	}
+
+	return renderedPlayer
+}
 
 type Player struct {
 	Name          string      `json:"name"`

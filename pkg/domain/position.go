@@ -12,6 +12,27 @@ type Position struct {
 	Z float64 `json:"z"`
 }
 
+type PositionTemplate map[string]interface{}
+type RenderedPosition map[string]interface{}
+
+func RenderPosition(template PositionTemplate, position Position) RenderedPosition {
+	result := map[string]interface{}{}
+	_, hasX := template["x"]
+	if hasX {
+		result["x"] = position.X
+	}
+	_, hasY := template["y"]
+	if hasY {
+		result["y"] = position.Y
+	}
+	_, hasZ := template["z"]
+	if hasZ {
+		result["z"] = position.Z
+	}
+
+	return result
+}
+
 var PositionType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Position",
 	Fields: graphql.Fields{

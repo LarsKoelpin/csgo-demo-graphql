@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"github.com/graphql-go/graphql"
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
 )
 
@@ -11,49 +10,33 @@ type FlashExplosionEvent struct {
 	Tick     int      `json:"tick"`
 }
 
-func NewFlashExplosion(tick int, e events.FlashExplode) GameEvent {
-	return GameEvent{
-		Name: "FLASH_EXPLOSION",
-		RealEvent: FlashExplosionEvent{
-			Position: Position{
-				X: e.Position.X,
-				Y: e.Position.Y,
-				Z: e.Position.Z,
-			},
-			Name: "FLASH_EXPLOSION",
-			Tick: tick,
-		},
+func RenderFlashExplosionEvent(template map[string]interface{}, e FlashExplosionEvent) map[string]interface{} {
+	result := map[string]interface{}{}
+	_, hasName := template["name"]
+	_, hasTick := template["tick"]
+	posTemplate, hasPosition := template["position"]
+
+	if hasName {
+		result["name"] = e.Name
 	}
+	if hasTick {
+		result["tick"] = e.Tick
+	}
+	if hasPosition {
+		positionTemplate := posTemplate.(map[string]interface{})
+		result["position"] = RenderPosition(positionTemplate, e.Position)
+	}
+	return result
 }
 
-var FlashExplosionType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "FlashExploded",
-	Fields: graphql.Fields{
-		"name": &graphql.Field{
-			Name: "name",
-			Type: graphql.String,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				return "FLASH_EXPLOSION", nil
-			},
+func NewFlashExplosion(tick int, e events.FlashExplode) FlashExplosionEvent {
+	return FlashExplosionEvent{
+		Position: Position{
+			X: e.Position.X,
+			Y: e.Position.Y,
+			Z: e.Position.Z,
 		},
-		"position": &graphql.Field{
-			Type: PositionType,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				x := p.Source.(GameEvent)
-				return x.RealEvent.(FlashExplosionEvent).Position, nil
-			},
-		},
-		"tick": &graphql.Field{
-			Type: graphql.Int,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				x := p.Source.(GameEvent)
-				return x.RealEvent.(FlashExplosionEvent).Tick, nil
-			},
-		},
-	},
-	IsTypeOf: func(p graphql.IsTypeOfParams) bool {
-		eventName := p.Value.(GameEvent).Name
-
-		return eventName == "FLASH_EXPLOSION"
-	},
-})
+		Name: "FLASH_EXPLOSION",
+		Tick: tick,
+	}
+}

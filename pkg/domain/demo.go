@@ -1,12 +1,5 @@
 package domain
 
-import (
-	"fmt"
-	"log"
-
-	"github.com/graphql-go/graphql"
-)
-
 // Demo represents the json of a whole demo.
 type Demo struct {
 	Header Header      `json:"header"`
@@ -14,63 +7,25 @@ type Demo struct {
 	Events []GameEvent `json:"events"`
 }
 
-// CreateDemoType creats a GraphQL Schema representing the whole query.
-func CreateDemoType(repository *DemoRepository) *graphql.Object {
-	return graphql.NewObject(graphql.ObjectConfig{
-		Name: "demo",
-		Fields: graphql.Fields{
-			"header": &graphql.Field{
-				Name: "header",
-				Type: HeaderType,
-				Args: nil,
-				Resolve: func(resolvParams graphql.ResolveParams) (interface{}, error) {
-					return repository.CurrentDemo.Header, nil
-				},
-			},
-			"ticks": &graphql.Field{
-				Name: "ticks",
-				Type: graphql.NewList(TickType),
-				Args: nil,
-				Resolve: func(resolvParams graphql.ResolveParams) (interface{}, error) {
-					return repository.CurrentDemo.Ticks, nil
-				},
-			},
-			"events": &graphql.Field{
-				Name: "events",
-				Type: graphql.NewList(GameEventType),
-				Args: graphql.FieldConfigArgument{
-					"type": &graphql.ArgumentConfig{
-						Type: graphql.NewList(graphql.String),
-					},
-				},
-				Resolve: func(resolvParams graphql.ResolveParams) (interface{}, error) {
-					demoFile := resolvParams.Args["type"]
+type DemoTemplate map[string]interface{}
+type RenderedDemo map[string]interface{}
 
-					if demoFile == nil {
-						log.Print("No Event filters. Returning no events.")
-						return []GameEvent{}, nil
-					}
+func RenderDemo(demoTemplate DemoTemplate, d Demo) RenderedDemo {
+	renderedDemo := map[string]interface{}{}
+	ticksTemplate, hasTicks := demoTemplate["ticks"]
+	if hasTicks {
+		ticksTemplate, _ := ticksTemplate.(map[string]interface{})
+		renderedDemo["ticks"] = renderTicks(ticksTemplate, d.Ticks)
+	}
+	return renderedDemo
+}
 
-					x := demoFile.([]interface{})
-					setOfStrings := make(map[string]bool)
-					for _, v := range x {
-						setOfStrings[fmt.Sprint(v)] = true
-					}
-
-					filteredEvents := make([]interface{}, 0)
-
-					for _, val := range repository.CurrentDemo.Events {
-						_, exists := setOfStrings[val.Name]
-						if exists {
-							filteredEvents = append(filteredEvents, val)
-						}
-					}
-
-					return filteredEvents, nil
-				},
-			},
-		},
-	})
+func renderTicks(template TickTemplate, p []Tick) []RenderedTick {
+	result := make([]RenderedTick, 0)
+	for _, x := range p {
+		result = append(result, RenderTick(template, x))
+	}
+	return result
 }
 
 // DemoRepository holds the state of the whole Operation. In this case a simple in memory database

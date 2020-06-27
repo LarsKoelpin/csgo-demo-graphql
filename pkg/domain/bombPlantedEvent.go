@@ -1,46 +1,35 @@
 package domain
 
 import (
-	"github.com/graphql-go/graphql"
+	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
 )
 
 // BombPlanted represents the event, when the bomb was planted.
 type BombPlanted struct {
 	Name     string `json:"name"`
-	Player   Player `json:"player"`
 	Bombsite int32  `json:"bombsite"`
 }
 
-// BombPlantedType represents the BombPlantedEvent as GraphQL Type.
-var BombPlantedType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "BombPlanted",
-	Fields: graphql.Fields{
-		"name": &graphql.Field{
-			Name: "name",
-			Type: graphql.String,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				return "BOMB_PLANTED", nil
-			},
-		},
-		"player": &graphql.Field{
-			Name: "player",
-			Type: PlayerType,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				x := p.Source.(GameEvent)
-				return x.RealEvent.(BombPlanted).Player, nil
-			},
-		},
-		"bombsite": &graphql.Field{
-			Type: graphql.Int,
-			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				x := p.Source.(GameEvent)
-				return x.RealEvent.(BombPlanted).Bombsite, nil
-			},
-		},
-	},
-	IsTypeOf: func(p graphql.IsTypeOfParams) bool {
-		eventName := p.Value.(GameEvent).Name
+func NewBombPlanted(e events.BombPlanted) BombPlanted {
+	return BombPlanted{
+		Name:     "BOMB_PLANTED",
+		Bombsite: int32(e.Site),
+	}
+}
 
-		return eventName == "BOMB_PLANTED"
-	},
-})
+// RenderBombPlanted renders a bombplanted event rastered to the given template.
+func RenderBombPlanted(template map[string]interface{}, p BombPlanted) map[string]interface{} {
+	result := map[string]interface{}{}
+	_, hasName := template["name"]
+	_, hasBombSite := template["bombsite"]
+
+	if hasName {
+		result["name"] = p.Name
+	}
+
+	if hasBombSite {
+		result["bombsite"] = p.Bombsite
+	}
+
+	return result
+}

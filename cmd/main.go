@@ -1,10 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/larskoelpin/csgo-demo-graphql/pkg/domain"
 	usecase "github.com/larskoelpin/csgo-demo-graphql/pkg/usecase"
@@ -41,15 +43,16 @@ func main() {
 		log.Fatal("No Input specified. try using --demo=/path/to/file :(")
 	}
 
-	demoRepository := domain.DemoRepository{}
-	log.Print("Reading User query ...")
-	userQuery := usecase.ReadQuery(*freqPtr)
-	log.Print("Creating a schema ...")
 	file, err := os.Open(*inPath)
 	if err != nil {
 		log.Fatal("DemoFile does not exist")
 	}
-	schema := usecase.SchemaFromDemo(file, demoRepository)
-	json := usecase.CreateJson(schema, userQuery)
-	usecase.CreateJsonFile("out.json", json)
+	//schema := usecase.SchemaFromDemo(file, demoRepository)
+	//json := usecase.CreateJson(schema, userQuery)
+	start := time.Now()
+	demo := domain.RecordDemo(file, 20, domain.DefaultDemoTemplate)
+	asJson, _ := json.Marshal(demo)
+	usecase.CreateJsonFile("out.json", asJson)
+	elapsed := time.Since(start)
+	log.Printf("Time rendering took %s", elapsed)
 }

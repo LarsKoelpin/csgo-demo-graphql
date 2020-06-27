@@ -10,83 +10,156 @@ import (
 )
 
 // RecordDemo models the process of replaying the demo while recording all events.
-func RecordDemo(file io.Reader, freq float64) Demo {
+func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) RenderedDemo {
 	p := dem.NewParser(file)
-	header, _ := p.ParseHeader()
-	allEvents := make([]GameEvent, 0)
+	renderedDemo := map[string]interface{}{}
+	p.ParseHeader()
+	allEvents := make([]map[string]interface{}, 0)
 	firing := make(map[int]bool)
-	p.RegisterEventHandler(func(e events.BombPlanted) {
-		allEvents = append(allEvents, GameEvent{
-			Name: "BOMB_PLANTED",
-			RealEvent: BombPlanted{
-				Name:     "BOMB_PLANTED",
-				Player:   CreateParticipant(e.Player, firing[e.Player.EntityID]),
-				Bombsite: int32(e.Site),
-			},
-		})
-	})
-
-	p.RegisterEventHandler(func(e events.WeaponFire) {
-		firing[e.Shooter.EntityID] = true
-		allEvents = append(allEvents, GameEvent{
-			Name: "WEAPON_FIRED",
-			RealEvent: WeaponFired{
-				Shooter: CreateParticipant(e.Shooter, firing[e.Shooter.EntityID]),
-				Weapon:  FromEquipment(e.Weapon),
-			},
-		})
-	})
 
 	smokes := make([]Smoke, 0)
 
-	p.RegisterEventHandler(func(e events.SmokeStart) {
-		allEvents = append(allEvents, SmokeStarted(p.GameState().IngameTick(), e))
-		smokes = append(smokes, Smoke{
-			Id: e.GrenadeEntityID,
-			Position: Position{
-				X: e.Position.X,
-				Y: e.Position.Y,
-			}})
-	})
+	eventsTemplate, hasEvents := demoTemplate["events"]
 
-	p.RegisterEventHandler(func(e events.SmokeExpired) {
-		allEvents = append(allEvents, SmokeExpired(p.GameState().IngameTick(), e))
-		smokes = Remove(smokes, e.GrenadeEntityID)
-	})
+	if hasEvents {
+		eventTypes := eventsTemplate.(map[string]interface{})
+		bombPlantedTemplate, hasBombPlanted := eventTypes["BOMB_PLANTED"]
+		smokeStartedTemplate, hasSmokeStarted := eventTypes["SMOKE_STARTED"]
+		smokeExpiredTemplate, hasSmokeExpired := eventTypes["SMOKE_EXPIRED"]
+		fireStartedTemplate, hasFireStarted := eventTypes["FIRE_STARTED"]
+		fireExpiredTemplate, hasFireExpired := eventTypes["FIRE_EXPIRED"]
+		roundStartedTemplate, hasRoundStarted := eventTypes["ROUND_STARTED"]
+		roundEndedTemplate, hasRoundEnded := eventTypes["ROUND_ENDED"]
+		matchStartedTemplate, hasMatchStarted := eventTypes["MATCH_STARTED"]
+		flashExplosionTemplate, hasFlashExplosion := eventTypes["FLASH_EXPLOSION"]
+		heExplosionTemplate, hasHeExplosion := eventTypes["HE_EXPLOSION"]
+		weaponFiredTemplate, hasWeaponFired := eventTypes["WEAPON_FIRED"]
 
-	p.RegisterEventHandler(func(e events.FireGrenadeStart) {
-		allEvents = append(allEvents, FireStarted(p.GameState().IngameTick(), e))
-	})
+		if hasBombPlanted {
+			p.RegisterEventHandler(func(e events.BombPlanted) {
+				x := bombPlantedTemplate.(map[string]interface{})
+				event := NewBombPlanted(e)
+				renderedBombPlantedEvent := RenderBombPlanted(x, event)
+				allEvents = append(allEvents, renderedBombPlantedEvent)
+			})
+		}
 
-	p.RegisterEventHandler(func(e events.FireGrenadeExpired) {
-		allEvents = append(allEvents, FireExpired(p.GameState().IngameTick(), e))
-	})
+		p.RegisterEventHandler(func(e events.WeaponFire) {
+			firing[e.Shooter.EntityID] = true
+			if hasWeaponFired {
+				x := weaponFiredTemplate.(map[string]interface{})
+				wf := NewWeaponFired(p.GameState().IngameTick(), e)
+				renderedEvent := RenderWeaponFired(x, wf)
+				allEvents = append(allEvents, renderedEvent)
+			}
+		})
 
-	p.RegisterEventHandler(func(e events.RoundStart) {
-		allEvents = append(allEvents, RoundStarted(p.GameState().IngameTick(), e))
-		smokes = make([]Smoke, 0)
-	})
+		if hasSmokeStarted {
+			x := smokeStartedTemplate.(map[string]interface{})
+			p.RegisterEventHandler(func(e events.SmokeStart) {
+				smokeEvent := SmokeStarted(p.GameState().IngameTick(), e)
+				renderedSmokeEvent := RenderSmokeStarted(x, smokeEvent)
+				allEvents = append(allEvents, renderedSmokeEvent)
+				smokes = append(smokes, Smoke{
+					Id: e.GrenadeEntityID,
+					Position: Position{
+						X: e.Position.X,
+						Y: e.Position.Y,
+					}})
+			})
+		}
 
-	p.RegisterEventHandler(func(e events.RoundEnd) {
-		allEvents = append(allEvents, RoundEnded(p.GameState().IngameTick(), e))
-		smokes = make([]Smoke, 0)
-	})
+		if hasSmokeExpired {
+			x := smokeExpiredTemplate.(map[string]interface{})
+			p.RegisterEventHandler(func(e events.SmokeExpired) {
+				smokeExpiredEvent := SmokeExpired(p.GameState().IngameTick(), e)
+				renderedExpiredEvent := RenderSmokeExpired(x, smokeExpiredEvent)
+				allEvents = append(allEvents, renderedExpiredEvent)
+				smokes = Remove(smokes, e.GrenadeEntityID)
+			})
+		}
 
-	p.RegisterEventHandler(func(e events.MatchStart) {
-		allEvents = append(allEvents, NewMatchStartedEvent(p.GameState().IngameTick(), e))
-		smokes = make([]Smoke, 0)
-	})
+		if hasFireStarted {
+			x := fireStartedTemplate.(map[string]interface{})
+			p.RegisterEventHandler(func(e events.FireGrenadeStart) {
+				fireStartedEvent := FireStarted(p.GameState().IngameTick(), e)
+				renderedStartedEvent := RenderFireStarted(x, fireStartedEvent)
+				allEvents = append(allEvents, renderedStartedEvent)
+			})
+		}
 
-	p.RegisterEventHandler(func(e events.FlashExplode) {
-		allEvents = append(allEvents, NewFlashExplosion(p.GameState().IngameTick(), e))
-	})
+		if hasFireExpired {
+			x := fireExpiredTemplate.(map[string]interface{})
+			p.RegisterEventHandler(func(e events.FireGrenadeExpired) {
+				fireExpiredEvent := FireExpired(p.GameState().IngameTick(), e)
+				renderedExpiredEvent := RenderFireExpired(x, fireExpiredEvent)
+				allEvents = append(allEvents, renderedExpiredEvent)
+				smokes = Remove(smokes, e.GrenadeEntityID)
+			})
+		}
 
-	p.RegisterEventHandler(func(e events.HeExplode) {
-		allEvents = append(allEvents, NewHeExplosion(p.GameState().IngameTick(), e))
-	})
+		if hasRoundStarted {
+			p.RegisterEventHandler(func(e events.RoundStart) {
+				tpl := roundStartedTemplate.(map[string]interface{})
+				rs := RoundStarted(p.GameState().IngameTick(), e)
+				renderedRoundStarted := RenderRoundStarted(tpl, rs)
+				allEvents = append(allEvents, renderedRoundStarted)
+				smokes = make([]Smoke, 0)
+			})
+		}
+
+		if hasRoundEnded {
+			p.RegisterEventHandler(func(e events.RoundEnd) {
+				tpl := roundEndedTemplate.(map[string]interface{})
+				rs := RoundEnded(p.GameState().IngameTick(), e)
+				rendered := RenderRoundEnded(tpl, rs)
+				allEvents = append(allEvents, rendered)
+				smokes = make([]Smoke, 0)
+			})
+		}
+
+		if hasMatchStarted {
+			p.RegisterEventHandler(func(e events.MatchStart) {
+				tpl := matchStartedTemplate.(map[string]interface{})
+				matchStarted := NewMatchStartedEvent(p.GameState().IngameTick(), e)
+				renderedMatchStarted := RenderMatchStartedEvent(tpl, matchStarted)
+				allEvents = append(allEvents, renderedMatchStarted)
+				smokes = make([]Smoke, 0)
+			})
+		}
+
+		if hasMatchStarted {
+			p.RegisterEventHandler(func(e events.MatchStart) {
+				tpl := matchStartedTemplate.(map[string]interface{})
+				matchStarted := NewMatchStartedEvent(p.GameState().IngameTick(), e)
+				renderedMatchStarted := RenderMatchStartedEvent(tpl, matchStarted)
+				allEvents = append(allEvents, renderedMatchStarted)
+				smokes = make([]Smoke, 0)
+			})
+		}
+
+		if hasFlashExplosion {
+			p.RegisterEventHandler(func(e events.FlashExplode) {
+				tpl := flashExplosionTemplate.(map[string]interface{})
+				explosion := NewFlashExplosion(p.GameState().IngameTick(), e)
+				renderedMatchStarted := RenderFlashExplosionEvent(tpl, explosion)
+				allEvents = append(allEvents, renderedMatchStarted)
+			})
+		}
+
+		if hasHeExplosion {
+			p.RegisterEventHandler(func(e events.HeExplode) {
+				tpl := heExplosionTemplate.(map[string]interface{})
+				explosion := NewHeExplosion(p.GameState().IngameTick(), e)
+				renderedHeExplosion := RenderHEExplosionEvent(tpl, explosion)
+				allEvents = append(allEvents, renderedHeExplosion)
+			})
+		}
+
+	}
 
 	snapshotRate := int(math.Round(p.TickRate() / freq))
-	renderedTicks := make([]Tick, 0)
+	renderedTicks := make([]RenderedTick, 0)
 	p.RegisterEventHandler(
 		func(e events.FrameDone) {
 			tick := p.GameState().IngameTick()
@@ -94,46 +167,47 @@ func RecordDemo(file io.Reader, freq float64) Demo {
 			grenades := make([]Grenade, 0)
 			infernos := make([]Inferno, 0)
 
-			if tick%snapshotRate == 0 {
-				for _, pl := range p.GameState().Participants().Playing() {
-					e := CreateParticipant(pl, firing[pl.EntityID])
+			ticksTemplate, hasTicks := demoTemplate["ticks"]
+			if hasTicks {
+				if tick%snapshotRate == 0 {
+					templateOfDemo, ok := ticksTemplate.(map[string]interface{})
+					if !ok {
+						return
+					}
+					for _, pl := range p.GameState().Participants().Playing() {
+						e := CreateParticipant(pl, firing[pl.EntityID])
 
-					players = append(players, e)
-					firing[pl.EntityID] = false
+						players = append(players, e)
+						firing[pl.EntityID] = false
+					}
+
+					for _, grenade := range p.GameState().GrenadeProjectiles() {
+						e := NewProjectile(*grenade, firing)
+						grenades = append(grenades, e)
+					}
+
+					for _, pl := range p.GameState().Infernos() {
+						infernos = append(infernos, ToInferno(*pl))
+					}
+					renderedTick := RenderTick(templateOfDemo, Tick{
+						Tick:              tick,
+						Players:           players,
+						Grenades:          grenades,
+						Infernos:          infernos,
+						Smokes:            smokes,
+						TotalRoundsPlayed: p.GameState().TotalRoundsPlayed(),
+					})
+					renderedTicks = append(renderedTicks, renderedTick)
 				}
-
-				for _, grenade := range p.GameState().GrenadeProjectiles() {
-					e := NewProjectile(*grenade, firing)
-					grenades = append(grenades, e)
-				}
-
-				for _, pl := range p.GameState().Infernos() {
-					infernos = append(infernos, ToInferno(*pl))
-				}
-
-				renderedTicks = append(renderedTicks, Tick{
-					Tick:              tick,
-					Players:           players,
-					Grenades:          grenades,
-					Infernos:          infernos,
-					Smokes:            smokes,
-					TotalRoundsPlayed: p.GameState().TotalRoundsPlayed(),
-				})
+				renderedDemo["ticks"] = renderedTicks
 			}
-
 		})
 
 	p.ParseToEnd()
 
+	renderedDemo["events"] = allEvents
+
 	log.Print("Recording finished")
 
-	return Demo{
-		Header: Header{
-			MapName:  header.MapName,
-			TickRate: p.TickRate(),
-			Fps:      int(freq),
-		},
-		Ticks:  renderedTicks,
-		Events: allEvents,
-	}
+	return renderedDemo
 }

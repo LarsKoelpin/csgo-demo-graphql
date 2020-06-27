@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"github.com/graphql-go/graphql"
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/common"
 )
 
@@ -13,21 +12,31 @@ type Equipment struct {
 	AmmoType       int `json:"ammoType"`
 }
 
-// EquipmentType represents the Equipment GraphQL Type.
-var EquipmentType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "equipment",
-	Fields: graphql.Fields{
-		"type": &graphql.Field{
-			Type: graphql.Int,
-		},
-		"ammoInMagazine": &graphql.Field{
-			Type: graphql.Int,
-		},
-		"ammoReserve": &graphql.Field{
-			Type: graphql.Int,
-		},
-	},
-})
+func RenderEquipment(template map[string]interface{}, eq Equipment) map[string]interface{} {
+	result := map[string]interface{}{}
+	_, hasType := template["type"]
+	_, hasAmmoInMagazine := template["ammoInMagazine"]
+	_, hasAmmoReserve := template["ammoReserve"]
+	_, hasAmmoType := template["ammoType"]
+
+	if hasType {
+		result["type"] = eq.Type
+	}
+
+	if hasAmmoInMagazine {
+		result["ammoInMagazine"] = eq.AmmoInMagazine
+	}
+
+	if hasAmmoReserve {
+		result["ammoReserve"] = eq.AmmoReserve
+	}
+
+	if hasAmmoType {
+		result["ammoType"] = eq.AmmoType
+	}
+
+	return result
+}
 
 // ToEntityEquipment maps an array of "core" Equipment to the JSON Model.
 func ToEntityEquipment(eq []*common.Equipment) []Equipment {

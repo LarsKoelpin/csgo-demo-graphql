@@ -1,7 +1,5 @@
 package domain
 
-import "github.com/graphql-go/graphql"
-
 type Tick struct {
 	Tick              int       `json:"tick"`
 	Players           []Player  `json:"players"`
@@ -12,29 +10,43 @@ type Tick struct {
 	TotalRoundsPlayed int       `json:"totalRoundsPlayed"`
 }
 
-var TickType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "Tick",
-	Fields: graphql.Fields{
-		"tick": &graphql.Field{
-			Type: graphql.Int,
-		},
-		"players": &graphql.Field{
-			Type: graphql.NewList(PlayerType),
-		},
-		"bomb": &graphql.Field{
-			Type: BombType,
-		},
-		"grenades": &graphql.Field{
-			Type: graphql.NewList(GrenadeProjectileType),
-		},
-		"infernos": &graphql.Field{
-			Type: graphql.NewList(InfernoType),
-		},
-		"smokes": &graphql.Field{
-			Type: graphql.NewList(SmokeType),
-		},
-		"totalRoundsPlayed": &graphql.Field{
-			Type: graphql.Int,
-		},
-	},
-})
+type TickTemplate map[string]interface{}
+type RenderedTick map[string]interface{}
+
+func RenderTick(template TickTemplate, t Tick) RenderedTick {
+	renderedTick := map[string]interface{}{}
+
+	_, players := template["players"]
+
+	if template["tick"] == true {
+		renderedTick["tick"] = t.Tick
+	}
+	if players {
+		renderedTick["players"] = renderPlayers(DefaultPlayerTemplate, t.Players)
+	}
+
+	if template["grenades"] == true {
+		renderedTick["grenades"] = t.Grenades
+	}
+
+	if template["smokes"] == true {
+		renderedTick["smokes"] = t.Smokes
+	}
+
+	if template["bomb"] == true {
+		renderedTick["bomb"] = t.Bomb
+	}
+
+	if template["totalRoundsPlayed"] == true {
+		renderedTick["totalRoundsPlayed"] = t.TotalRoundsPlayed
+	}
+	return renderedTick
+}
+
+func renderPlayers(template PlayerTemplate, p []Player) []RenderedPlayer {
+	result := make([]RenderedPlayer, 0)
+	for _, x := range p {
+		result = append(result, RenderPlayer(template, x))
+	}
+	return result
+}

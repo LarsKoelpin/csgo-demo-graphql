@@ -1,7 +1,6 @@
 package domain
 
 import (
-	"github.com/graphql-go/graphql"
 	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/common"
 )
 
@@ -15,30 +14,6 @@ func NewProjectile(e common.GrenadeProjectile, firing map[int]bool) Grenade {
 		UniqueId:       e.UniqueID(),
 	}
 }
-
-var GrenadeProjectileType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "Grenade",
-	Fields: graphql.Fields{
-		"tick": &graphql.Field{
-			Type: graphql.Int,
-		},
-		"thrower": &graphql.Field{
-			Type: PlayerType,
-		},
-		"owner": &graphql.Field{
-			Type: PlayerType,
-		},
-		"position": &graphql.Field{
-			Type: PositionType,
-		},
-		"trajectory": &graphql.Field{
-			Type: graphql.NewList(PositionType),
-		},
-		"weapon": &graphql.Field{
-			Type: EquipmentType,
-		},
-	},
-})
 
 type Grenade struct {
 	Thrower        Player     `json:"thrower"`
