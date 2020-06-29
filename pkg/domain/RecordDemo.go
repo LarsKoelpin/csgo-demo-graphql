@@ -1,12 +1,11 @@
 package domain
 
 import (
-	"io"
-	"log"
-	"math"
-
-	dem "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs"
-	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
+  dem "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs"
+  "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
+  "io"
+  "log"
+  "math"
 )
 
 // RecordDemo models the process of replaying the demo while recording all events.
@@ -22,6 +21,7 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 		MapName:  h.MapName,
 		TickRate: p.TickRate(),
 		Fps:      int(freq),
+		FrameRate: int(math.Round(h.FrameRate())),
 	}
 	allEvents := make([]map[string]interface{}, 0)
 	smokes := make([]Smoke, 0)
@@ -54,7 +54,7 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 			firing[e.Shooter.EntityID] = true
 			if hasWeaponFired {
 				x := weaponFiredTemplate.(map[string]interface{})
-				wf := NewWeaponFired(p.GameState().IngameTick(), e)
+				wf := NewWeaponFired(p.CurrentFrame(), e)
 				renderedEvent := RenderWeaponFired(x, wf)
 				allEvents = append(allEvents, renderedEvent)
 			}
@@ -63,7 +63,7 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 		if hasSmokeStarted {
 			x := smokeStartedTemplate.(map[string]interface{})
 			p.RegisterEventHandler(func(e events.SmokeStart) {
-				smokeEvent := SmokeStarted(p.GameState().IngameTick(), e)
+				smokeEvent := SmokeStarted(p.CurrentFrame(), e)
 				renderedSmokeEvent := RenderSmokeStarted(x, smokeEvent)
 				allEvents = append(allEvents, renderedSmokeEvent)
 
@@ -80,7 +80,7 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 		if hasSmokeExpired {
 			x := smokeExpiredTemplate.(map[string]interface{})
 			p.RegisterEventHandler(func(e events.SmokeExpired) {
-				smokeExpiredEvent := SmokeExpired(p.GameState().IngameTick(), e)
+				smokeExpiredEvent := SmokeExpired(p.CurrentFrame(), e)
 				renderedExpiredEvent := RenderSmokeExpired(x, smokeExpiredEvent)
 				allEvents = append(allEvents, renderedExpiredEvent)
 				smokes = Remove(smokes, e.GrenadeEntityID)
@@ -90,7 +90,7 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 		if hasFireStarted {
 			x := fireStartedTemplate.(map[string]interface{})
 			p.RegisterEventHandler(func(e events.FireGrenadeStart) {
-				fireStartedEvent := FireStarted(p.GameState().IngameTick(), e)
+				fireStartedEvent := FireStarted(p.CurrentFrame(), e)
 				renderedStartedEvent := RenderFireStarted(x, fireStartedEvent)
 				allEvents = append(allEvents, renderedStartedEvent)
 			})
@@ -99,7 +99,7 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 		if hasFireExpired {
 			x := fireExpiredTemplate.(map[string]interface{})
 			p.RegisterEventHandler(func(e events.FireGrenadeExpired) {
-				fireExpiredEvent := FireExpired(p.GameState().IngameTick(), e)
+				fireExpiredEvent := FireExpired(p.CurrentFrame(), e)
 				renderedExpiredEvent := RenderFireExpired(x, fireExpiredEvent)
 				allEvents = append(allEvents, renderedExpiredEvent)
 				smokes = Remove(smokes, e.GrenadeEntityID)
@@ -109,7 +109,7 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 		if hasRoundStarted {
 			p.RegisterEventHandler(func(e events.RoundStart) {
 				tpl := roundStartedTemplate.(map[string]interface{})
-				rs := RoundStarted(p.GameState().IngameTick(), e)
+				rs := RoundStarted(p.CurrentFrame(), e)
 				renderedRoundStarted := RenderRoundStarted(tpl, rs)
 				allEvents = append(allEvents, renderedRoundStarted)
 				smokes = make([]Smoke, 0)
@@ -119,7 +119,7 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 		if hasRoundEnded {
 			p.RegisterEventHandler(func(e events.RoundEnd) {
 				tpl := roundEndedTemplate.(map[string]interface{})
-				rs := RoundEnded(p.GameState().IngameTick(), e)
+				rs := RoundEnded(p.CurrentFrame(), e)
 				rendered := RenderRoundEnded(tpl, rs)
 				allEvents = append(allEvents, rendered)
 				smokes = make([]Smoke, 0)
@@ -129,7 +129,7 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 		if hasMatchStarted {
 			p.RegisterEventHandler(func(e events.MatchStart) {
 				tpl := matchStartedTemplate.(map[string]interface{})
-				matchStarted := NewMatchStartedEvent(p.GameState().IngameTick(), e)
+				matchStarted := NewMatchStartedEvent(p.CurrentFrame(), e)
 				renderedMatchStarted := RenderMatchStartedEvent(tpl, matchStarted)
 				allEvents = append(allEvents, renderedMatchStarted)
 				smokes = make([]Smoke, 0)
@@ -139,7 +139,7 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 		if hasMatchStarted {
 			p.RegisterEventHandler(func(e events.MatchStart) {
 				tpl := matchStartedTemplate.(map[string]interface{})
-				matchStarted := NewMatchStartedEvent(p.GameState().IngameTick(), e)
+				matchStarted := NewMatchStartedEvent(p.CurrentFrame(), e)
 				renderedMatchStarted := RenderMatchStartedEvent(tpl, matchStarted)
 				allEvents = append(allEvents, renderedMatchStarted)
 				smokes = make([]Smoke, 0)
@@ -149,7 +149,7 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 		if hasFlashExplosion {
 			p.RegisterEventHandler(func(e events.FlashExplode) {
 				tpl := flashExplosionTemplate.(map[string]interface{})
-				explosion := NewFlashExplosion(p.GameState().IngameTick(), e)
+				explosion := NewFlashExplosion(p.CurrentFrame(), e)
 				renderedMatchStarted := RenderFlashExplosionEvent(tpl, explosion)
 				allEvents = append(allEvents, renderedMatchStarted)
 			})
@@ -158,7 +158,7 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 		if hasHeExplosion {
 			p.RegisterEventHandler(func(e events.HeExplode) {
 				tpl := heExplosionTemplate.(map[string]interface{})
-				explosion := NewHeExplosion(p.GameState().IngameTick(), e)
+				explosion := NewHeExplosion(p.CurrentFrame(), e)
 				renderedHeExplosion := RenderHEExplosionEvent(tpl, explosion)
 				allEvents = append(allEvents, renderedHeExplosion)
 			})
@@ -166,11 +166,31 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 
 	}
 
-	snapshotRate := int(math.Round(p.TickRate() / freq))
-	renderedTicks := make([]RenderedTick, 0)
+	frameRate := h.FrameRate()
+
+	var snapshotRate = -1;
+	if(math.Round(frameRate) == 32) {
+	  log.Print("Use Framerate 32")
+    snapshotRate = int(math.Round(p.TickRate() / freq))
+  }
+  if(math.Round(frameRate) == 64) {
+	  log.Print("Use Framerate 64")
+    snapshotRate = int(math.Round(p.TickRate() / freq)) / 2
+  }
+
+  if(math.Round(frameRate) == 128) {
+    log.Print("Use Framerate 128")
+    snapshotRate = int(math.Round(p.TickRate() / freq)) / 4
+  }
+
+  if (snapshotRate == -1) {
+    log.Fatal("Could not determine snapshotrate for framerate ", math.Round(frameRate))
+  }
+
+  renderedTicks := make([]RenderedTick, 0)
 	p.RegisterEventHandler(
 		func(e events.FrameDone) {
-			tick := p.GameState().IngameTick()
+			tick := p.CurrentFrame()
 			players := make([]Player, 0)
 			grenades := make([]Grenade, 0)
 			infernos := make([]Inferno, 0)
@@ -198,7 +218,7 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 						infernos = append(infernos, ToInferno(*pl))
 					}
 					renderedTick := RenderTick(templateOfDemo, Tick{
-						Tick:              tick,
+						Tick:              int(tick),
 						Players:           players,
 						Grenades:          grenades,
 						Infernos:          infernos,

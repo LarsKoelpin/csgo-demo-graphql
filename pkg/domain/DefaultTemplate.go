@@ -51,6 +51,7 @@ var DefaultDemoTemplate = map[string]interface{}{
 		"mapName":  true,
 		"tickrate": true,
 		"fps":      true,
+		"framerate":      true,
 	},
 	"ticks":  DefaultTickTemplate,
 	"events": DefaultEventsTemplate,

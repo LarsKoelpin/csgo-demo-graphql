@@ -55,8 +55,10 @@ func HTTPHandler(w http.ResponseWriter, r *http.Request) {
 	byteReader := bytes.NewReader(fileAsBytes)
 
 	log.Print("Creating a schema ...")
-	demo := domain.RecordDemo(byteReader, 20, domain.DefaultDemoTemplate)
+	demo := domain.RecordDemo(byteReader, 24, domain.DefaultDemoTemplate)
+	log.Print("Marshalling")
 	json, _ := json2.Marshal(demo)
+	log.Print("Sending ...")
 	w.Write([]byte(json))
 }
 

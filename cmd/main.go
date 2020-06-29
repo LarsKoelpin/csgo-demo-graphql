@@ -1,16 +1,15 @@
 package main
 
 import (
-	"encoding/json"
-	"flag"
-	"fmt"
-	"io/ioutil"
-	"log"
-	"os"
-	"time"
+  "encoding/json"
+  "flag"
+  "fmt"
+  "log"
+  "os"
+  "time"
 
-	"github.com/larskoelpin/csgo-demo-graphql/pkg/domain"
-	usecase "github.com/larskoelpin/csgo-demo-graphql/pkg/usecase"
+  "github.com/larskoelpin/csgo-demo-graphql/pkg/domain"
+  usecase "github.com/larskoelpin/csgo-demo-graphql/pkg/usecase"
 )
 
 func main() {
@@ -49,7 +48,6 @@ func main() {
 		log.Fatal("DemoFile does not exist")
 	}
 
-	queryFile, err := os.Open(*queryPtr)
 	if err != nil {
 		log.Fatal("DemoFile does not exist")
 	}
@@ -57,11 +55,9 @@ func main() {
 	prodQuery := domain.DefaultDemoTemplate
 	//schema := usecase.SchemaFromDemo(file, demoRepository)
 	//json := usecase.CreateJson(schema, userQuery)
-	query, _ := ioutil.ReadAll(queryFile)
-
-	usecase.ParseQuery(string(query))
 	start := time.Now()
-	demo := domain.RecordDemo(file, 20, prodQuery)
+	demo := domain.RecordDemo(file, 16, prodQuery)
+	log.Print("Create JSON")
 	asJson, _ := json.Marshal(demo)
 	usecase.CreateJsonFile("out.json", asJson)
 	elapsed := time.Since(start)
