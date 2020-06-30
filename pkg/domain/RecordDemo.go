@@ -166,26 +166,34 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 
 	}
 
-	frameRate := h.FrameRate()
+	frameRate := math.Round(h.FrameRate())
+	tickRate := math.Round(p.TickRate())
 
 	var snapshotRate = -1;
-	if(math.Round(frameRate) == 32) {
-	  log.Print("Use Framerate 32")
-    snapshotRate = int(math.Round(p.TickRate() / freq))
+  // This is perfecly fine :shurg;
+	if(frameRate == 32 && tickRate == 128) {
+	  log.Print("Use Framerate 32/128")
+    snapshotRate = int(math.Round(tickRate/ freq))
   }
-  if(math.Round(frameRate) == 64) {
-	  log.Print("Use Framerate 64")
-    snapshotRate = int(math.Round(p.TickRate() / freq)) / 2
-  }
-
-  if(math.Round(frameRate) == 128) {
-    log.Print("Use Framerate 128")
-    snapshotRate = int(math.Round(p.TickRate() / freq)) / 4
+  // This is perfecly fine :shurg;
+  if(frameRate == 64 && tickRate == 128) {
+	  log.Print("Use Framerate 64/128")
+    snapshotRate = int(math.Round(tickRate/ freq)) / 2
   }
 
-  if (snapshotRate == -1) {
-    log.Fatal("Could not determine snapshotrate for framerate ", math.Round(frameRate))
+  // This is perfecly fine :shurg;
+  if(frameRate == 32 && tickRate == 64) {
+    log.Print("Use Framerate 32/64")
+    snapshotRate = int(math.Round(tickRate/ freq)) / 2
   }
+
+  if (snapshotRate == -1 || snapshotRate == 0) {
+    log.Fatal("Could not determine snapshotrate for framerate ", frameRate)
+  }
+
+  log.Print("Use tickrate", tickRate)
+  log.Print("Use snapshotrate", snapshotRate)
+
 
   renderedTicks := make([]RenderedTick, 0)
 	p.RegisterEventHandler(
