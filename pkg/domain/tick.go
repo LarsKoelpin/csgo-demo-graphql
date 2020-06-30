@@ -18,6 +18,7 @@ func RenderTick(template TickTemplate, t Tick) RenderedTick {
 
 	smokesTpl, hasSmokes := template["smokes"]
 	_, players := template["players"]
+	bombTemplate, hasBomb := template["bomb"]
 
 	if template["tick"] == true {
 		renderedTick["tick"] = t.Tick
@@ -35,8 +36,9 @@ func RenderTick(template TickTemplate, t Tick) RenderedTick {
 		renderedTick["smokes"] = RenderSmokes(smokesTemplate, t.Smokes)
 	}
 
-	if template["bomb"] == true {
-		renderedTick["bomb"] = t.Bomb
+	if hasBomb {
+		bombTemplate := bombTemplate.(map[string]interface{})
+		renderedTick["bomb"] = RenderBomb(bombTemplate, t.Bomb)
 	}
 
 	if template["totalRoundsPlayed"] == true {

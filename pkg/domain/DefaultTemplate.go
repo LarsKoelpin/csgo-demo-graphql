@@ -37,6 +37,18 @@ var DefaultTickTemplate = map[string]interface{}{
 	"tick":              true,
 	"players":           DefaultPlayerTemplate,
 	"totalRoundsPlayed": true,
+	"bomb": map[string]interface{}{
+		"position": map[string]interface{}{
+			"x": true,
+			"y": true,
+		},
+		"lastOnGroundPosition": map[string]interface{}{
+			"x": true,
+			"y": true,
+		},
+		"carrier": true,
+		"planted": true,
+	},
 	"smokes": map[string]interface{}{
 		"id": true,
 		"position": map[string]interface{}{
@@ -48,10 +60,10 @@ var DefaultTickTemplate = map[string]interface{}{
 
 var DefaultDemoTemplate = map[string]interface{}{
 	"header": map[string]interface{}{
-		"mapName":  true,
-		"tickrate": true,
-		"fps":      true,
-		"framerate":      true,
+		"mapName":   true,
+		"tickrate":  true,
+		"fps":       true,
+		"framerate": true,
 	},
 	"ticks":  DefaultTickTemplate,
 	"events": DefaultEventsTemplate,

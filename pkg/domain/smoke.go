@@ -1,7 +1,5 @@
 package domain
 
-import "github.com/graphql-go/graphql"
-
 // Smoke represents an active smoke in the world.
 type Smoke struct {
 	Id       int      `json:"id"`
@@ -34,19 +32,6 @@ func RenderSmokes(template map[string]interface{}, s []Smoke) []map[string]inter
 
 	return result
 }
-
-// SmokeType represents the GraphQL Type of a Smoke
-var SmokeType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "smoke",
-	Fields: graphql.Fields{
-		"position": &graphql.Field{
-			Type: PositionType,
-		},
-		"id": &graphql.Field{
-			Type: graphql.Int,
-		},
-	},
-})
 
 // Remove removes a Smoke Id from smokes
 func Remove(smokes []Smoke, toRemove int) []Smoke {

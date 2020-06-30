@@ -1,11 +1,12 @@
 package domain
 
 import (
-  dem "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs"
-  "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
-  "io"
-  "log"
-  "math"
+	"io"
+	"log"
+	"math"
+
+	dem "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs"
+	"github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
 )
 
 // RecordDemo models the process of replaying the demo while recording all events.
@@ -18,14 +19,15 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 
 	h, _ := p.ParseHeader()
 	header := Header{
-		MapName:  h.MapName,
-		TickRate: p.TickRate(),
-		Fps:      int(freq),
+		MapName:   h.MapName,
+		TickRate:  p.TickRate(),
+		Fps:       int(freq),
 		FrameRate: int(math.Round(h.FrameRate())),
 	}
 	allEvents := make([]map[string]interface{}, 0)
 	smokes := make([]Smoke, 0)
 	firing := make(map[int]bool)
+	var bombPlanted = false
 
 	if hasEvents {
 		eventTypes := eventsTemplate.(map[string]interface{})
@@ -43,6 +45,7 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 
 		if hasBombPlanted {
 			p.RegisterEventHandler(func(e events.BombPlanted) {
+				bombPlanted = true
 				x := bombPlantedTemplate.(map[string]interface{})
 				event := NewBombPlanted(e)
 				renderedBombPlantedEvent := RenderBombPlanted(x, event)
@@ -108,6 +111,7 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 
 		if hasRoundStarted {
 			p.RegisterEventHandler(func(e events.RoundStart) {
+				bombPlanted = false
 				tpl := roundStartedTemplate.(map[string]interface{})
 				rs := RoundStarted(p.CurrentFrame(), e)
 				renderedRoundStarted := RenderRoundStarted(tpl, rs)
@@ -118,6 +122,7 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 
 		if hasRoundEnded {
 			p.RegisterEventHandler(func(e events.RoundEnd) {
+				bombPlanted = false
 				tpl := roundEndedTemplate.(map[string]interface{})
 				rs := RoundEnded(p.CurrentFrame(), e)
 				rendered := RenderRoundEnded(tpl, rs)
@@ -128,16 +133,7 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 
 		if hasMatchStarted {
 			p.RegisterEventHandler(func(e events.MatchStart) {
-				tpl := matchStartedTemplate.(map[string]interface{})
-				matchStarted := NewMatchStartedEvent(p.CurrentFrame(), e)
-				renderedMatchStarted := RenderMatchStartedEvent(tpl, matchStarted)
-				allEvents = append(allEvents, renderedMatchStarted)
-				smokes = make([]Smoke, 0)
-			})
-		}
-
-		if hasMatchStarted {
-			p.RegisterEventHandler(func(e events.MatchStart) {
+				bombPlanted = false
 				tpl := matchStartedTemplate.(map[string]interface{})
 				matchStarted := NewMatchStartedEvent(p.CurrentFrame(), e)
 				renderedMatchStarted := RenderMatchStartedEvent(tpl, matchStarted)
@@ -169,33 +165,32 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 	frameRate := math.Round(h.FrameRate())
 	tickRate := math.Round(p.TickRate())
 
-	var snapshotRate = -1;
-  // This is perfecly fine :shurg;
-	if(frameRate == 32 && tickRate == 128) {
-	  log.Print("Use Framerate 32/128")
-    snapshotRate = int(math.Round(tickRate/ freq))
-  }
-  // This is perfecly fine :shurg;
-  if(frameRate == 64 && tickRate == 128) {
-	  log.Print("Use Framerate 64/128")
-    snapshotRate = int(math.Round(tickRate/ freq)) / 2
-  }
+	var snapshotRate = -1
+	// This is perfecly fine :shurg;
+	if frameRate == 32 && tickRate == 128 {
+		log.Print("Use Framerate 32/128")
+		snapshotRate = int(math.Round(tickRate / freq))
+	}
+	// This is perfecly fine :shurg;
+	if frameRate == 64 && tickRate == 128 {
+		log.Print("Use Framerate 64/128")
+		snapshotRate = int(math.Round(tickRate/freq)) / 2
+	}
 
-  // This is perfecly fine :shurg;
-  if(frameRate == 32 && tickRate == 64) {
-    log.Print("Use Framerate 32/64")
-    snapshotRate = int(math.Round(tickRate/ freq)) / 2
-  }
+	// This is perfecly fine :shurg;
+	if frameRate == 32 && tickRate == 64 {
+		log.Print("Use Framerate 32/64")
+		snapshotRate = int(math.Round(tickRate/freq)) / 2
+	}
 
-  if (snapshotRate == -1 || snapshotRate == 0) {
-    log.Fatal("Could not determine snapshotrate for framerate ", frameRate)
-  }
+	if snapshotRate == -1 || snapshotRate == 0 {
+		log.Fatal("Could not determine snapshotrate for framerate ", frameRate)
+	}
 
-  log.Print("Use tickrate", tickRate)
-  log.Print("Use snapshotrate", snapshotRate)
+	log.Print("Use tickrate", tickRate)
+	log.Print("Use snapshotrate", snapshotRate)
 
-
-  renderedTicks := make([]RenderedTick, 0)
+	renderedTicks := make([]RenderedTick, 0)
 	p.RegisterEventHandler(
 		func(e events.FrameDone) {
 			tick := p.CurrentFrame()
@@ -211,7 +206,7 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 						log.Panic("NOPE")
 					}
 					for _, pl := range p.GameState().Participants().Playing() {
-						e := CreateParticipant(pl, firing[pl.EntityID])
+						e := NewPlayer(pl, firing[pl.EntityID])
 
 						players = append(players, e)
 						firing[pl.EntityID] = false
@@ -226,12 +221,13 @@ func RecordDemo(file io.Reader, freq float64, demoTemplate DemoTemplate) Rendere
 						infernos = append(infernos, ToInferno(*pl))
 					}
 					renderedTick := RenderTick(templateOfDemo, Tick{
-						Tick:              int(tick),
+						Tick:              tick,
 						Players:           players,
 						Grenades:          grenades,
 						Infernos:          infernos,
 						Smokes:            smokes,
 						TotalRoundsPlayed: p.GameState().TotalRoundsPlayed(),
+						Bomb:              NewBomb(p.GameState().Bomb(), bombPlanted),
 					})
 					renderedTicks = append(renderedTicks, renderedTick)
 				}

@@ -148,7 +148,7 @@ type Player struct {
 	Firing        bool        `json:"isFiring, omitempty"`
 }
 
-func CreateParticipant(pl *common.Player, fireing bool) Player {
+func NewPlayer(pl *common.Player, fireing bool) Player {
 	return Player{
 		Name:          pl.Name,
 		EntityID:      pl.EntityID,

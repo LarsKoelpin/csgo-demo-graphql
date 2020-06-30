@@ -6,8 +6,8 @@ import (
 
 func NewProjectile(e common.GrenadeProjectile, firing map[int]bool) Grenade {
 	return Grenade{
-		Thrower:        CreateParticipant(e.Thrower, firing[e.Thrower.EntityID]),
-		Owner:          CreateParticipant(e.Owner, firing[e.Owner.EntityID]),
+		Thrower:        NewPlayer(e.Thrower, firing[e.Thrower.EntityID]),
+		Owner:          NewPlayer(e.Owner, firing[e.Owner.EntityID]),
 		Trajectory:     FromVectors(e.Trajectory),
 		WeaponInstance: FromEquipment(e.WeaponInstance),
 		Position:       FromVector(e.Position()),

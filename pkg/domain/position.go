@@ -3,7 +3,6 @@ package domain
 import (
 	"github.com/golang/geo/r2"
 	"github.com/golang/geo/r3"
-	"github.com/graphql-go/graphql"
 )
 
 type Position struct {
@@ -32,21 +31,6 @@ func RenderPosition(template PositionTemplate, position Position) RenderedPositi
 
 	return result
 }
-
-var PositionType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "Position",
-	Fields: graphql.Fields{
-		"x": &graphql.Field{
-			Type: graphql.Float,
-		},
-		"y": &graphql.Field{
-			Type: graphql.Float,
-		},
-		"z": &graphql.Field{
-			Type: graphql.Float,
-		},
-	},
-})
 
 // FromPoints creats a position array from a point array.
 func FromPoints(e []r2.Point) []Position {
