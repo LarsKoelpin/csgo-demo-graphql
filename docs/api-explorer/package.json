@@ -8,7 +8,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "gh-pages": "^3.0.0",
-    "graphiql": "^1.0.0",
+    "graphiql": "^1.4.7",
     "graphql": "^15.1.0",
     "graphql-tools": "^5.0.1-ff37880.0",
     "react": "^16.13.1",
